@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Musfeat</string>
+
+    <!-- Login -->
+    <string name="login_title">Вход</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Пароль</string>
+    <string name="forget_password">Забыли пароль</string>
 </resources>
