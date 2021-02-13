@@ -1,4 +1,4 @@
-package com.example.musfeat.view
+package com.example.musfeat.view.login
 
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
@@ -12,7 +12,9 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.LoginPresenter
+import com.example.musfeat.view.registration.RegistrationFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -28,13 +30,20 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
+        activity?.toolbar?.title = getString(R.string.login_title)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
-        email.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_email_24, 0, 0, 0)
-        password.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_24, 0, 0, 0)
-        email.addTextChangedListener(object : TextWatcher {
+
+
+        btnRegistration.setOnClickListener {
+            presenter.onBtnRegistrationClicked()
+        }
+
+        etEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_email_24, 0, 0, 0)
+        etPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_24, 0, 0, 0)
+        etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -51,15 +60,15 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
                         ResourcesCompat.getColor(resources, R.color.colorDarkBlue, theme)
                     )
                     DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
-                    email.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-                    email.setCompoundDrawablesWithIntrinsicBounds(
+                    etEmail.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                    etEmail.setCompoundDrawablesWithIntrinsicBounds(
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme),
                         null,
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel_24, theme),
                         null
                     )
                 } else if (p0.isEmpty()) {
-                    email.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    etEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_email_24, 0, 0, 0
                     )
                     var drawable =
@@ -70,8 +79,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
                         ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
                     )
                     DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
-                    email.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-                    email.setCompoundDrawablesWithIntrinsicBounds(
+                    etEmail.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                    etEmail.setCompoundDrawablesWithIntrinsicBounds(
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme),
                         null, null, null
                     )
@@ -79,7 +88,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
             }
         })
 
-        password.addTextChangedListener(object : TextWatcher {
+        etPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -96,15 +105,15 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
                         ResourcesCompat.getColor(resources, R.color.colorDarkBlue, theme)
                     )
                     DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
-                    password.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-                    password.setCompoundDrawablesWithIntrinsicBounds(
+                    etPassword.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                    etPassword.setCompoundDrawablesWithIntrinsicBounds(
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme),
                         null,
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel_24, theme),
                         null
                     )
                 } else if (p0.isEmpty()) {
-                    password.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    etPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_lock_24,
                         0, 0, 0
                     )
@@ -116,8 +125,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
                         ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
                     )
                     DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
-                    password.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-                    password.setCompoundDrawablesWithIntrinsicBounds(
+                    etPassword.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                    etPassword.setCompoundDrawablesWithIntrinsicBounds(
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme),
                         null, null, null
                     )
@@ -125,28 +134,28 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
             }
         })
 
-        email.setOnTouchListener { _, event ->
+        etEmail.setOnTouchListener { _, event ->
 
-            if (event.action == MotionEvent.ACTION_DOWN && email.compoundDrawables[2] != null &&
-                event.x >= email.right - email.left - email.compoundDrawables[2].bounds.width() &&
-                email.text.isNotEmpty()
+            if (event.action == MotionEvent.ACTION_DOWN && etEmail.compoundDrawables[2] != null &&
+                event.x >= etEmail.right - etEmail.left - etEmail.compoundDrawables[2].bounds.width() &&
+                etEmail.text.isNotEmpty()
             )
-                email.setText("")
+                etEmail.setText("")
             false
         }
 
-        password.setOnTouchListener { _, event ->
+        etPassword.setOnTouchListener { _, event ->
 
             if (event.action == MotionEvent.ACTION_DOWN &&
-                password.compoundDrawables[2] != null &&
-                event.x >= password.right - password.left - password.compoundDrawables[2].bounds.width() &&
-                password.text.isNotEmpty()
+                etPassword.compoundDrawables[2] != null &&
+                event.x >= etPassword.right - etPassword.left - etPassword.compoundDrawables[2].bounds.width() &&
+                etPassword.text.isNotEmpty()
             )
-                password.setText("")
+                etPassword.setText("")
             false
         }
 
-        login_button.setBackgroundResource(R.color.colorWhiteBlueShade)
+        btnLogin.setBackgroundResource(R.color.colorWhiteBlueShade)
 
         val loginTextWatcher: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -154,16 +163,28 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
-                val mUsername: String = email.text.toString().trim()
-                val mPassword: String = password.text.toString().trim()
-                if (mUsername.isNotEmpty() && mPassword.isNotEmpty())
-                    login_button.setBackgroundResource(R.color.colorDarkBlue)
-                else
-                    login_button.setBackgroundResource(R.color.colorWhiteBlueShade)
+                val mUsername: String = etEmail.text.toString().trim()
+                val mPassword: String = etPassword.text.toString().trim()
+                if (mUsername.isNotEmpty() && mPassword.isNotEmpty()) {
+                    btnLogin.setBackgroundResource(R.color.colorDarkBlue)
+                    btnLogin.isEnabled = true
+                } else {
+                    btnLogin.setBackgroundResource(R.color.colorWhiteBlueShade)
+                    btnLogin.isEnabled = false
+                }
             }
         }
 
-        email.addTextChangedListener(loginTextWatcher)
-        password.addTextChangedListener(loginTextWatcher)
+        etEmail.addTextChangedListener(loginTextWatcher)
+        etPassword.addTextChangedListener(loginTextWatcher)
+
+
+    }
+
+    override fun toRegistrationFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, RegistrationFragment.newInstance())
+            .addToBackStack("LoginFragment")
+            .commit()
     }
 }

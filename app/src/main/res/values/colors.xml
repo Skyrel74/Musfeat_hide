@@ -7,4 +7,5 @@
     <color name="colorDefault">#9e9e9e</color>
     <color name="colorDarkBlue">#00008b</color>
     <color name="colorWhiteBlueShade">#DF949DCD</color>
+    <color name="colorRed">#FF2424</color>
 </resources>

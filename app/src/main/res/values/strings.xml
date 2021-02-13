@@ -3,8 +3,18 @@
 
     <!-- Login -->
     <string name="login_title">Вход</string>
-    <string name="email_hint">Email</string>
-    <string name="password_hint">Пароль</string>
-    <string name="forget_password">Забыли пароль</string>
+    <string name="login_forget_password">Забыли пароль</string>
+    <string name="registration_title">Регистрация</string>
+    <string name="registration_email_hint">Email…</string>
+    <string name="registration_name_hint">Ваше имя…</string>
+    <string name="registration_surname_hint">Ваша фамилия…</string>
+    <string name="registration_password_hint">Пароль…</string>
+    <string name="registration_password_repeat_hint">Повторите пароль…</string>
+    <string name="registration_guitar">Гитара</string>
+    <string name="registration_vocal">Вокал</string>
+    <string name="registration_drums">Барабаны</string>
+    <string name="registration_choose_skills">Выберите ваши навыки:</string>
+    <string name="registration_button_registration">Зарегистрироваться</string>
     <string name="remember_password">Запомнить пользователя</string>
+
 </resources>
