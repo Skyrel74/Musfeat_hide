@@ -1,4 +1,4 @@
-package com.example.musfeat.view.login
+package com.example.musfeat.view.signIn
 
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
@@ -11,21 +11,21 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
-import com.example.musfeat.presentation.LoginPresenter
-import com.example.musfeat.view.registration.RegistrationFragment
+import com.example.musfeat.presentation.SignInPresenter
+import com.example.musfeat.view.signUp.SignUpFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
-import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.fragment_sign_in.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
+class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
 
     @Inject
-    lateinit var loginPresenter: LoginPresenter
+    lateinit var loginPresenter: SignInPresenter
 
-    private val presenter: LoginPresenter by moxyPresenter { loginPresenter }
+    private val presenter: SignInPresenter by moxyPresenter { loginPresenter }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -183,7 +183,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), LoginView {
 
     override fun toRegistrationFragment() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.container, RegistrationFragment.newInstance())
+            .replace(R.id.container, SignUpFragment.newInstance())
             .addToBackStack("LoginFragment")
             .commit()
     }

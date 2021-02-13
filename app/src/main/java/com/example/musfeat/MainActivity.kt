@@ -2,7 +2,7 @@ package com.example.musfeat
 
 import android.os.Bundle
 import com.example.musfeat.architecture.BaseActivity
-import com.example.musfeat.view.login.LoginFragment
+import com.example.musfeat.view.signIn.SignInFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 
@@ -24,7 +24,7 @@ class MainActivity : BaseActivity() {
             toolbar.title = getString(R.string.login_title)
 
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, LoginFragment())
+                .add(R.id.container, SignInFragment())
                 .commit()
         }
     }

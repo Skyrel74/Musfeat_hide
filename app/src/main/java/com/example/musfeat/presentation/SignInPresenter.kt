@@ -1,10 +1,10 @@
 package com.example.musfeat.presentation
 
 import com.example.musfeat.architecture.BasePresenter
-import com.example.musfeat.view.login.LoginView
+import com.example.musfeat.view.signIn.SignInView
 import javax.inject.Inject
 
-class LoginPresenter @Inject constructor() : BasePresenter<LoginView>() {
+class SignInPresenter @Inject constructor() : BasePresenter<SignInView>() {
 
     fun onBtnRegistrationClicked(){
         viewState.toRegistrationFragment()

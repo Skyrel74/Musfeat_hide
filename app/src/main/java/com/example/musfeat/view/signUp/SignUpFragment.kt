@@ -1,4 +1,4 @@
-package com.example.musfeat.view.registration
+package com.example.musfeat.view.signUp
 
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
@@ -8,39 +8,40 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
-import com.example.musfeat.presentation.RegistrationPresenter
+import com.example.musfeat.presentation.SignUpPresenter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
-import kotlinx.android.synthetic.main.fragment_registration.*
+import kotlinx.android.synthetic.main.fragment_sign_up.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class RegistrationFragment : BaseFragment(R.layout.fragment_registration), RegistrationView {
+class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
 
 
     companion object {
 
         @JvmStatic
-        fun newInstance() = RegistrationFragment().apply {
+        fun newInstance() = SignUpFragment().apply {
             arguments = Bundle().apply { }
         }
     }
 
     @Inject
-    lateinit var registrationPresenter: RegistrationPresenter
+    lateinit var registrationPresenter: SignUpPresenter
 
-    private val presenter: RegistrationPresenter by moxyPresenter { registrationPresenter }
+    private val presenter: SignUpPresenter by moxyPresenter { registrationPresenter }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.registration_title)
-
         initListeners()
 
     }
@@ -72,11 +73,8 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration), Regis
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if (p0?.length != 0) {
-                    editView(R.color.colorDarkBlue, R.drawable.ic_name_24, etNameReg)
-                } else if (p0.isEmpty()) {
-                    editView(R.color.colorDefault, R.drawable.ic_name_24, etNameReg)
-                }
+                presenter.checkName(p0.toString().trim())
+
             }
         })
 
@@ -86,14 +84,7 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration), Regis
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if (p0?.length != 0) {
-                    editView(R.color.colorDarkBlue, R.drawable.ic_name_24, etSurnameReg)
-                } else if (p0.isEmpty()) {
-                    etSurnameReg.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        R.drawable.ic_email_24, 0, 0, 0
-                    )
-                    editView(R.color.colorDefault, R.drawable.ic_name_24, etSurnameReg)
-                }
+                presenter.checkSurname(p0.toString().trim())
             }
         })
 
@@ -104,11 +95,7 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration), Regis
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if (p0?.length != 0) {
-                    editView(R.color.colorDarkBlue, R.drawable.ic_email_24, etEmailReg)
-                } else if (p0.isEmpty()) {
-                    editView(R.color.colorDefault, R.drawable.ic_email_24, etEmailReg)
-                }
+                presenter.checkEmail(p0.toString().trim())
             }
         })
 
@@ -133,6 +120,21 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration), Regis
         onTouchListener(etEmailReg)
         onTouchListener(etPasswordReg)
         onTouchListener(etPasswordRegRepeat)
+
+        btnCreateAccount.setOnClickListener {
+            pbLoading.isVisible = true
+            btnCreateAccount.setBackgroundResource(R.color.colorWhiteBlueShade)
+            presenter.checkData(
+                etNameReg.text.toString().trim(),
+                etSurnameReg.text.toString().trim(),
+                etEmailReg.text.toString().trim(),
+                etPasswordReg.text.toString().trim(),
+                etPasswordRegRepeat.text.toString().trim(),
+                cbGuitar.isChecked,
+                cbVocal.isChecked,
+                cbDrums.isChecked
+            )
+        }
     }
 
     override fun onPasswordNotEqual() {
@@ -148,6 +150,42 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration), Regis
     override fun onPasswordEmpty() {
         editView(R.color.colorDefault, R.drawable.ic_lock_24, etPasswordReg)
         editView(R.color.colorDefault, R.drawable.ic_lock_24, etPasswordRegRepeat)
+    }
+
+    override fun onNameEmpty() {
+        editView(R.color.colorDefault, R.drawable.ic_name_24, etNameReg)
+    }
+
+    override fun onNameHas() {
+        editView(R.color.colorDarkBlue, R.drawable.ic_name_24, etNameReg)
+    }
+
+    override fun onSurnameEmpty() {
+        editView(R.color.colorDefault, R.drawable.ic_name_24, etSurnameReg)
+    }
+
+    override fun onSurnameHas() {
+        editView(R.color.colorDarkBlue, R.drawable.ic_name_24, etSurnameReg)
+    }
+
+    override fun onEmailEmpty() {
+        editView(R.color.colorDefault, R.drawable.ic_email_24, etEmailReg)
+    }
+
+    override fun onEmailHas() {
+        editView(R.color.colorDarkBlue, R.drawable.ic_email_24, etEmailReg)
+    }
+
+    override fun showError(message: String) {
+        pbLoading.isVisible = false
+        btnCreateAccount.setBackgroundResource(R.color.colorDarkBlue)
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun toMenuActivity() {
+        pbLoading.isVisible = false
+        btnCreateAccount.setBackgroundResource(R.color.colorDarkBlue)
+        Toast.makeText(requireContext(), "Успешный вход", Toast.LENGTH_LONG).show()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -193,7 +231,6 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration), Regis
             ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel_24, theme),
             null
         )
-
     }
 
 
