@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
@@ -36,13 +37,9 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
 
-
-        btnRegistration.setOnClickListener {
-            presenter.onBtnRegistrationClicked()
-        }
-
         etEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_email_24, 0, 0, 0)
         etPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_24, 0, 0, 0)
+
         etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -51,7 +48,7 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
             override fun afterTextChanged(p0: Editable?) {
                 val resources = context!!.resources
                 val theme = context!!.theme
-                if (p0?.length != 0) {
+                if (p0?.length != 0 && presenter.isEmailValid(p0.toString())) {
                     var drawable =
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme)
                     drawable = DrawableCompat.wrap(drawable!!)
@@ -67,7 +64,7 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel_24, theme),
                         null
                     )
-                } else if (p0.isEmpty()) {
+                } else if (p0 != null && p0.isEmpty()) {
                     etEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_email_24, 0, 0, 0
                     )
@@ -96,7 +93,7 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
             override fun afterTextChanged(p0: Editable?) {
                 val resources = context!!.resources
                 val theme = context!!.theme
-                if (p0?.length != 0) {
+                if (p0?.toString()?.length!! >= 4) {
                     var drawable =
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme)
                     drawable = DrawableCompat.wrap(drawable!!)
@@ -163,9 +160,9 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
-                val mUsername: String = etEmail.text.toString().trim()
+                val mEmail: String = etEmail.text.toString().trim()
                 val mPassword: String = etPassword.text.toString().trim()
-                if (mUsername.isNotEmpty() && mPassword.isNotEmpty()) {
+                if (presenter.isEmailValid(mEmail) && mPassword.length >= 4) {
                     btnLogin.setBackgroundResource(R.color.colorDarkBlue)
                     btnLogin.isEnabled = true
                 } else {
@@ -178,13 +175,31 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
         etEmail.addTextChangedListener(loginTextWatcher)
         etPassword.addTextChangedListener(loginTextWatcher)
 
+        onTouchListener(etEmail)
+        onTouchListener(etPassword)
 
+        btnRegistration.setOnClickListener {
+            presenter.onBtnRegistrationClicked()
+        }
     }
 
-    override fun toRegistrationFragment() {
+    @SuppressLint("ClickableViewAccessibility")
+    private fun onTouchListener(editTextId: EditText) {
+        editTextId.setOnTouchListener { _, event ->
+
+            if (event.action == MotionEvent.ACTION_DOWN &&
+                editTextId.compoundDrawables[2] != null &&
+                event.x >= editTextId.right - editTextId.left - editTextId.compoundDrawables[2].bounds.width() &&
+                editTextId.text.isNotEmpty()
+            )
+                editTextId.setText("")
+            false
+        }
+    }
+
+    override fun toSignUpFragment() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.container, SignUpFragment.newInstance())
-            .addToBackStack("LoginFragment")
+            .replace(R.id.container, SignUpFragment())
             .commit()
     }
 }

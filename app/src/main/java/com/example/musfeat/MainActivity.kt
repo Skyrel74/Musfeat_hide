@@ -1,6 +1,7 @@
 package com.example.musfeat
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import com.example.musfeat.architecture.BaseActivity
 import com.example.musfeat.view.signIn.SignInFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +20,6 @@ class MainActivity : BaseActivity() {
     // Переопределить для MVP
     private fun setStartupFragment(savedInstanceState: Bundle?) {
 
-
         if (savedInstanceState == null) {
             toolbar.title = getString(R.string.login_title)
 
@@ -27,5 +27,9 @@ class MainActivity : BaseActivity() {
                 .add(R.id.container, SignInFragment())
                 .commit()
         }
+    }
+
+    fun showProgressBar(isVisible: Boolean = true) {
+        pbLoading.isVisible = isVisible
     }
 }

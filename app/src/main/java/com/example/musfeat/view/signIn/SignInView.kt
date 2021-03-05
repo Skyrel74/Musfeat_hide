@@ -6,6 +6,6 @@ import moxy.viewstate.strategy.alias.OneExecution
 interface SignInView : BaseView {
 
     @OneExecution
-    fun toRegistrationFragment()
+    fun toSignUpFragment()
 
 }

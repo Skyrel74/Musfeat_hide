@@ -70,6 +70,20 @@
         android:autofillHints="@string/registration_password_hint"
         android:inputType="textPassword" />
 
+    <TextView
+        android:id="@+id/tvChooseSkills"
+        android:gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:textColor="@color/colorDarkBlue"
+        android:layout_marginRight="20dp"
+        android:drawablePadding="10dp"
+        android:layout_below="@+id/etPasswordRegRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/registration_choose_skills" />
+
     <CheckBox
         android:id="@+id/cbGuitar"
         android:layout_below="@+id/tvChooseSkills"
@@ -101,41 +115,18 @@
         android:drawablePadding="10dp"
         android:text="@string/registration_drums" />
 
-    <TextView
-        android:id="@+id/tvChooseSkills"
-        android:gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorDarkBlue"
-        android:layout_marginRight="20dp"
-        android:drawablePadding="10dp"
-        android:layout_below="@+id/etPasswordRegRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/registration_choose_skills" />
-
     <Button
         android:id="@+id/btnCreateAccount"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/cbDrums"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp"
+        android:background="#00008b"
         android:text="@string/registration_button_registration"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
         android:textAllCaps="false"
-        android:background="#00008b" />
-
-    <ProgressBar
-        android:id="@+id/pbLoading"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-        android:scrollbarSize="100sp" />
-
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
 </RelativeLayout>

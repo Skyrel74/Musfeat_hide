@@ -2,51 +2,37 @@ package com.example.musfeat.presentation
 
 import com.example.musfeat.architecture.BasePresenter
 import com.example.musfeat.view.signUp.SignUpView
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
 
-    fun checkPasswordEquality(password: String, passwordRepeat: String) {
+    fun isEmailValid(email: String): Boolean =
+        email.isNotEmpty() && Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{1,25}" +
+                    ")+"
+        ).matcher(email).matches()
 
-        if (password.isEmpty() && passwordRepeat.isEmpty()) viewState.onPasswordEmpty()
-        else if (password == passwordRepeat) viewState.onPasswordEqual()
-        else viewState.onPasswordNotEqual()
-
-    }
-
-    fun checkName(data: String) {
-        if (data.isEmpty()) viewState.onNameEmpty()
-        else viewState.onNameHas()
-    }
-
-    fun checkSurname(data: String) {
-        if (data.isEmpty()) viewState.onSurnameEmpty()
-        else viewState.onSurnameHas()
-    }
-
-    fun checkEmail(data: String) {
-        if (data.isEmpty()) viewState.onEmailEmpty()
-        else viewState.onEmailHas()
+    fun isPasswordValid(password: String): Boolean = when {
+        password.isEmpty() -> false
+        password.length < 5 -> false
+        else -> true
     }
 
     fun checkData(
-        name: String, surname: String, email: String, password: String, repeatPassword: String,
-        guitarSkill: Boolean, vocalSkill: Boolean, drumsSkill: Boolean
-    ) {
-
-        if (name.isEmpty()) {
-            viewState.showError("Заполните поле 'Имя'")
-        } else if (surname.isEmpty()) {
-            viewState.showError("Заполните поле 'Фамилия'")
-        } else if (email.isEmpty()) {
-            viewState.showError("Заполните поле 'Email'")
-        } else if (password.isEmpty() || repeatPassword.isEmpty()) {
-            viewState.showError("Заполните поле 'Пароль'")
-        } else if (password != repeatPassword) {
-            viewState.showError("Пароли не совпадают")
-        } else {
-            viewState.toMenuActivity()
-        }
+        name: String, surname: String, email: String, password: String, repeatPassword: String
+    ) = when {
+        name.isEmpty() -> viewState.showError("Заполните поле 'Имя'")
+        surname.isEmpty() -> viewState.showError("Заполните поле 'Фамилия'")
+        email.isEmpty() -> viewState.showError("Заполните поле 'Email'")
+        !isEmailValid(email) -> viewState.showError("Заполните поле 'Email' по шаблону example@mail.com")
+        password.isEmpty() || repeatPassword.isEmpty() -> viewState.showError("Заполните поля 'Пароль'")
+        password != repeatPassword -> viewState.showError("Пароли не совпадают")
+        else -> viewState.toSignInFragment()
     }
-
 }

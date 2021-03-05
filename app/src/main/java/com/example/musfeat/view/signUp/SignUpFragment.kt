@@ -11,10 +11,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.view.isVisible
+import com.example.musfeat.MainActivity
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.SignUpPresenter
+import com.example.musfeat.view.signIn.SignInFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_sign_up.*
@@ -25,15 +26,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
 
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = SignUpFragment().apply {
-            arguments = Bundle().apply { }
-        }
-    }
-
     @Inject
     lateinit var registrationPresenter: SignUpPresenter
 
@@ -42,12 +34,11 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.registration_title)
-        initListeners()
-
+        setListeners()
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun initListeners() {
+    private fun setListeners() {
 
         etNameReg.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_name_24, 0, 0, 0)
         etSurnameReg.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_name_24, 0, 0, 0)
@@ -65,55 +56,259 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
             0
         )
 
-
-
-        etNameReg.addTextChangedListener(object : TextWatcher {
+        val twName: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                presenter.checkName(p0.toString().trim())
-
+                val resources = context!!.resources
+                val theme = context!!.theme
+                if (p0?.isNotEmpty()!!) {
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_name_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable,
+                        ResourcesCompat.getColor(resources, R.color.colorDarkBlue, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
+                    etNameReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                } else {
+                    etNameReg.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_name_24,
+                        0,
+                        0,
+                        0
+                    )
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_name_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
+                    etNameReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                    etNameReg.setCompoundDrawablesWithIntrinsicBounds(
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_name_24, theme),
+                        null, null, null
+                    )
+                }
             }
-        })
-
-        etSurnameReg.addTextChangedListener(object : TextWatcher {
+        }
+        val twSurname: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                presenter.checkSurname(p0.toString().trim())
+                val resources = context!!.resources
+                val theme = context!!.theme
+                if (p0?.isNotEmpty()!!) {
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_name_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDarkBlue, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etSurnameReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                } else {
+                    etSurnameReg.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_name_24,
+                        0,
+                        0,
+                        0
+                    )
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_name_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etSurnameReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                    etSurnameReg.setCompoundDrawablesWithIntrinsicBounds(
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_name_24, theme),
+                        null, null, null
+                    )
+                }
             }
-        })
-
-
-        etEmailReg.addTextChangedListener(object : TextWatcher {
+        }
+        val twEmail: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                presenter.checkEmail(p0.toString().trim())
+                val resources = context!!.resources
+                val theme = context!!.theme
+                if (p0?.isNotEmpty()!! && presenter.isEmailValid(p0.toString())) {
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDarkBlue, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etEmailReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                } else {
+                    etEmailReg.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_email_24,
+                        0,
+                        0,
+                        0
+                    )
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etEmailReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+                    etEmailReg.setCompoundDrawablesWithIntrinsicBounds(
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme),
+                        null, null, null
+                    )
+                }
             }
-        })
-
-        val twPasswordEquals: TextWatcher = object : TextWatcher {
+        }
+        val twPassword: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                val password = etPasswordReg.text.toString().trim()
-                val passwordRepeat = etPasswordRegRepeat.text.toString().trim()
-                presenter.checkPasswordEquality(password, passwordRepeat)
+                val resources = context!!.resources
+                val theme = context!!.theme
+                if (presenter.isPasswordValid(p0.toString())) {
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDarkBlue, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etPasswordReg.setCompoundDrawablesWithIntrinsicBounds(
+                        drawable,
+                        null,
+                        null,
+                        null
+                    )
+                } else {
+                    etPasswordReg.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_lock_24,
+                        0,
+                        0,
+                        0
+                    )
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etPasswordReg.setCompoundDrawablesWithIntrinsicBounds(
+                        drawable,
+                        null,
+                        null,
+                        null
+                    )
+                    etPasswordReg.setCompoundDrawablesWithIntrinsicBounds(
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme),
+                        null, null, null
+                    )
+                }
             }
+        }
+        val twPasswordRepeat: TextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(p0: Editable?) {
+                val resources = context!!.resources
+                val theme = context!!.theme
+                if (presenter.isPasswordValid(p0.toString()) && isPasswordsEquals()) {
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDarkBlue, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etPasswordRegRepeat.setCompoundDrawablesWithIntrinsicBounds(
+                        drawable,
+                        null,
+                        null,
+                        null
+                    )
+                } else {
+                    etPasswordRegRepeat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_lock_24,
+                        0,
+                        0,
+                        0
+                    )
+                    var drawable =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme)
+                    drawable = DrawableCompat.wrap(drawable!!)
+                    DrawableCompat.setTint(
+                        drawable!!,
+                        ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+                    )
+                    DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                    etPasswordRegRepeat.setCompoundDrawablesWithIntrinsicBounds(
+                        drawable,
+                        null,
+                        null,
+                        null
+                    )
+                    etPasswordRegRepeat.setCompoundDrawablesWithIntrinsicBounds(
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme),
+                        null, null, null
+                    )
+                }
+            }
+        }
+        val twBtnCreateAccount: TextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable) {
+                val mName: String = etNameReg.text.toString().trim()
+                val mSurname: String = etSurnameReg.text.toString().trim()
+                val mEmail: String = etEmailReg.text.toString().trim()
+                val mPassword: String = etPasswordReg.text.toString().trim()
+                val mPasswordReg: String = etPasswordRegRepeat.text.toString().trim()
+                if (mName.isNotEmpty() && mSurname.isNotEmpty() && presenter.isEmailValid(mEmail) &&
+                    presenter.isPasswordValid(mPassword) && presenter.isPasswordValid(mPasswordReg) &&
+                    mPassword == mPasswordReg
+                ) {
+                    btnCreateAccount.setBackgroundResource(R.color.colorDarkBlue)
+                } else {
+                    btnCreateAccount.setBackgroundResource(R.color.colorWhiteBlueShade)
+                }
+            }
         }
 
-        etPasswordReg.addTextChangedListener(twPasswordEquals)
-        etPasswordRegRepeat.addTextChangedListener(twPasswordEquals)
+        etNameReg.addTextChangedListener(twName)
+        etSurnameReg.addTextChangedListener(twSurname)
+        etEmailReg.addTextChangedListener(twEmail)
+        etPasswordReg.addTextChangedListener(twPassword)
+        etPasswordRegRepeat.addTextChangedListener(twPasswordRepeat)
+        btnCreateAccount.addTextChangedListener(twBtnCreateAccount)
 
         onTouchListener(etNameReg)
         onTouchListener(etSurnameReg)
@@ -122,70 +317,69 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
         onTouchListener(etPasswordRegRepeat)
 
         btnCreateAccount.setOnClickListener {
-            pbLoading.isVisible = true
-            btnCreateAccount.setBackgroundResource(R.color.colorWhiteBlueShade)
+            (activity as MainActivity).showProgressBar(true)
             presenter.checkData(
                 etNameReg.text.toString().trim(),
                 etSurnameReg.text.toString().trim(),
                 etEmailReg.text.toString().trim(),
                 etPasswordReg.text.toString().trim(),
-                etPasswordRegRepeat.text.toString().trim(),
-                cbGuitar.isChecked,
-                cbVocal.isChecked,
-                cbDrums.isChecked
+                etPasswordRegRepeat.text.toString().trim()
             )
         }
     }
 
-    override fun onPasswordNotEqual() {
-        editView(R.color.colorRed, R.drawable.ic_lock_24, etPasswordReg)
-        editView(R.color.colorRed, R.drawable.ic_lock_24, etPasswordRegRepeat)
-    }
-
-    override fun onPasswordEqual() {
-        editView(R.color.colorDarkBlue, R.drawable.ic_lock_24, etPasswordReg)
-        editView(R.color.colorDarkBlue, R.drawable.ic_lock_24, etPasswordRegRepeat)
-    }
-
-    override fun onPasswordEmpty() {
-        editView(R.color.colorDefault, R.drawable.ic_lock_24, etPasswordReg)
-        editView(R.color.colorDefault, R.drawable.ic_lock_24, etPasswordRegRepeat)
-    }
-
-    override fun onNameEmpty() {
-        editView(R.color.colorDefault, R.drawable.ic_name_24, etNameReg)
-    }
-
-    override fun onNameHas() {
-        editView(R.color.colorDarkBlue, R.drawable.ic_name_24, etNameReg)
-    }
-
-    override fun onSurnameEmpty() {
-        editView(R.color.colorDefault, R.drawable.ic_name_24, etSurnameReg)
-    }
-
-    override fun onSurnameHas() {
-        editView(R.color.colorDarkBlue, R.drawable.ic_name_24, etSurnameReg)
-    }
-
-    override fun onEmailEmpty() {
-        editView(R.color.colorDefault, R.drawable.ic_email_24, etEmailReg)
-    }
-
-    override fun onEmailHas() {
-        editView(R.color.colorDarkBlue, R.drawable.ic_email_24, etEmailReg)
-    }
+    fun isPasswordsEquals(): Boolean =
+        etPasswordReg.text.toString() == etPasswordRegRepeat.text.toString()
 
     override fun showError(message: String) {
-        pbLoading.isVisible = false
-        btnCreateAccount.setBackgroundResource(R.color.colorDarkBlue)
+        (activity as MainActivity).showProgressBar(false)
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
-    override fun toMenuActivity() {
-        pbLoading.isVisible = false
-        btnCreateAccount.setBackgroundResource(R.color.colorDarkBlue)
-        Toast.makeText(requireContext(), "Успешный вход", Toast.LENGTH_LONG).show()
+    override fun toSignInFragment() {
+        val resources = requireContext().resources
+        val theme = requireContext().theme
+        var drawable = DrawableCompat.wrap(
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_name_24, theme)!!
+        )
+        DrawableCompat.setTint(
+            drawable!!,
+            ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+        )
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
+        etNameReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        etSurnameReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+
+        drawable = DrawableCompat.wrap(
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme)!!
+        )
+        DrawableCompat.setTint(
+            drawable!!,
+            ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+        )
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
+        etEmailReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+
+        drawable = DrawableCompat.wrap(
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_email_24, theme)!!
+        )
+        DrawableCompat.setTint(
+            drawable!!,
+            ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+        )
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
+        etPasswordReg.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        etPasswordRegRepeat.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+
+        (activity as MainActivity).showProgressBar(false)
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.registration_success),
+            Toast.LENGTH_LONG
+        ).show()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, SignInFragment())
+            .commit()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -201,37 +395,4 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
             false
         }
     }
-
-    private fun editView(colorId: Int, imgId: Int, editTextId: EditText) {
-        val resources = requireContext().resources
-        val theme = requireContext().theme
-        var drawable =
-            ResourcesCompat.getDrawable(resources, imgId, theme)
-        drawable = DrawableCompat.wrap(drawable!!)
-        DrawableCompat.setTint(
-            drawable!!,
-            ResourcesCompat.getColor(resources, colorId, theme)
-        )
-        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
-        editTextId.setCompoundDrawablesWithIntrinsicBounds(
-            drawable,
-            null,
-            null,
-            null
-        )
-        if (editTextId.text.toString().trim()
-                .isEmpty()
-        ) editTextId.setCompoundDrawablesWithIntrinsicBounds(
-            ResourcesCompat.getDrawable(resources, imgId, theme),
-            null, null, null
-        )
-        else editTextId.setCompoundDrawablesWithIntrinsicBounds(
-            ResourcesCompat.getDrawable(resources, imgId, theme),
-            null,
-            ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel_24, theme),
-            null
-        )
-    }
-
-
 }
