@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "567910344918",
+    "project_id": "musfeat",
+    "storage_bucket": "musfeat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567910344918:android:2f6aa892ca38dca4bb4177",
+        "android_client_info": {
+          "package_name": "com.example.musfeat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567910344918-vigtvpu5si35inq4v2e4dnjtruqk9la7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWahw0f9D0wRKix-lWBiUeqGKNYHj603s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567910344918-vigtvpu5si35inq4v2e4dnjtruqk9la7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

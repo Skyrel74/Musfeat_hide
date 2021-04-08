@@ -9,5 +9,5 @@ interface SignUpView : BaseView {
     fun showError(message: String)
 
     @OneExecution
-    fun toSignInFragment()
+    fun toSignInFragment(uid: String, email: String)
 }

@@ -23,6 +23,32 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
 
+    private var uID: String? = null
+    private var uEmail: String? = null
+
+    companion object {
+
+        private const val ARG_UID = "UID"
+        private const val ARG_EMAIL = "EMAIL"
+
+        fun newInstance(uid: String, email: String): SignInFragment {
+            val fragment = SignInFragment()
+            val args = Bundle()
+            args.putSerializable(ARG_UID, uid)
+            args.putSerializable(ARG_EMAIL, email)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (arguments != null) {
+            uID = requireArguments().getSerializable(ARG_UID) as String?
+            uEmail = requireArguments().getSerializable(ARG_EMAIL) as String?
+        }
+    }
+
     @Inject
     lateinit var loginPresenter: SignInPresenter
 
@@ -64,7 +90,7 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel_24, theme),
                         null
                     )
-                } else if (p0 != null && p0.isEmpty()) {
+                } else {
                     etEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_email_24, 0, 0, 0
                     )
@@ -109,7 +135,7 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_cancel_24, theme),
                         null
                     )
-                } else if (p0.isEmpty()) {
+                } else {
                     etPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_lock_24,
                         0, 0, 0

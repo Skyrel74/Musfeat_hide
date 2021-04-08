@@ -336,7 +336,7 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
-    override fun toSignInFragment() {
+    override fun toSignInFragment(uid: String, email: String) {
         val resources = requireContext().resources
         val theme = requireContext().theme
         var drawable = DrawableCompat.wrap(
@@ -378,7 +378,7 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
             Toast.LENGTH_LONG
         ).show()
         parentFragmentManager.beginTransaction()
-            .replace(R.id.container, SignInFragment())
+            .replace(R.id.container, SignInFragment.newInstance(uid, email))
             .commit()
     }
 
