@@ -54,7 +54,7 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
                             .child(FirebaseAuth.getInstance().currentUser.uid)
                             .setValue(user)
 
-                        viewState.toSignInFragment(firebaseUser.uid, firebaseUser.email)
+                        viewState.toSignInFragment(email, password)
                     } else {
                         viewState.showError("Создать аккаунт не получилось, попробуйте позже")
                     }

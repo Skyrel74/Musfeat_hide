@@ -8,45 +8,61 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.SignInPresenter
 import com.example.musfeat.view.signUp.SignUpFragment
+import com.example.musfeat.view.swipe.SwipeFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
 
-    private var uID: String? = null
     private var uEmail: String? = null
+    private var uPassword: String? = null
 
     companion object {
 
-        private const val ARG_UID = "UID"
         private const val ARG_EMAIL = "EMAIL"
+        private const val ARG_PASSWORD = "PASSWORD"
 
-        fun newInstance(uid: String, email: String): SignInFragment {
+        fun newInstance(email: String, password: String): SignInFragment {
             val fragment = SignInFragment()
             val args = Bundle()
-            args.putSerializable(ARG_UID, uid)
             args.putSerializable(ARG_EMAIL, email)
+            args.putSerializable(ARG_PASSWORD, password)
             fragment.arguments = args
             return fragment
         }
     }
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        auth = FirebaseAuth.getInstance()
         if (arguments != null) {
-            uID = requireArguments().getSerializable(ARG_UID) as String?
-            uEmail = requireArguments().getSerializable(ARG_EMAIL) as String?
+            uEmail = requireArguments().getSerializable(ARG_EMAIL) as String
+            uPassword = requireArguments().getSerializable(ARG_PASSWORD) as String
+            presenter.signIn(uEmail!!, uPassword!!)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val currentUser: FirebaseUser? = auth.currentUser
+        if (currentUser != null)
+            toSwipeFragment()
     }
 
     @Inject
@@ -204,6 +220,10 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
         onTouchListener(etEmail)
         onTouchListener(etPassword)
 
+        btnLogin.setOnClickListener {
+            presenter.signIn(etEmail.text.toString(), etPassword.text.toString())
+        }
+
         btnRegistration.setOnClickListener {
             presenter.onBtnRegistrationClicked()
         }
@@ -227,5 +247,15 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SignUpFragment())
             .commit()
+    }
+
+    override fun toSwipeFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, SwipeFragment())
+            .commit()
+    }
+
+    override fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 }

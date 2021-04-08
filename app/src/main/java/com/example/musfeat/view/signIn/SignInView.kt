@@ -8,4 +8,9 @@ interface SignInView : BaseView {
     @OneExecution
     fun toSignUpFragment()
 
+    @OneExecution
+    fun toSwipeFragment()
+
+    @OneExecution
+    fun showError(message: String)
 }
