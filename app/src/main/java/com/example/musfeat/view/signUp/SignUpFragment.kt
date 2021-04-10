@@ -377,6 +377,12 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
             getString(R.string.registration_success),
             Toast.LENGTH_LONG
         ).show()
+
+        etNameReg.setText("")
+        etSurnameReg.setText("")
+        etEmailReg.setText("")
+        etPasswordReg.setText("")
+        etPasswordRegRepeat.setText("")
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SignInFragment.newInstance(uid, email))
             .commit()

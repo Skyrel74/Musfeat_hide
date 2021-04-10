@@ -1,4 +1,4 @@
-package com.example.musfeat.view.swipe
+package com.example.musfeat.view.calendar
 
 import android.os.Bundle
 import android.view.View
@@ -8,11 +8,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 
 @AndroidEntryPoint
-class SwipeFragment : BaseFragment(R.layout.fragment_swipe) {
+class CalendarFragment : BaseFragment(R.layout.fragment_calendar) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.toolbar?.title = getString(R.string.cards_title)
+        activity?.toolbar?.title = getString(R.string.calendar_title)
     }
 }

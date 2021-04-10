@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.example.musfeat.MainActivity
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.SignInPresenter
@@ -74,6 +75,8 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
         activity?.toolbar?.title = getString(R.string.login_title)
+        (activity as MainActivity).showBackBtn(false)
+        (activity as MainActivity).showNavView(false)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -244,12 +247,18 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     }
 
     override fun toSignUpFragment() {
+        (activity as MainActivity).showBackBtn(true)
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SignUpFragment())
             .commit()
     }
 
     override fun toSwipeFragment() {
+        etEmail.setText("")
+        etPassword.setText("")
+        (activity as MainActivity).showBackBtn(true)
+        (activity as MainActivity).showNavView(true)
+        activity?.navView?.selectedItemId = R.id.navigation_cards
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SwipeFragment())
             .commit()

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_cards"
+        android:icon="@drawable/ic_cards_24"
+        android:title="@string/navigation_cards_icon_description" />
+
+    <item
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/ic_map_24"
+        android:title="@string/navigation_map_icon_description" />
+
+    <item
+        android:id="@+id/navigation_calendar"
+        android:icon="@drawable/ic_calendar_24"
+        android:title="@string/navigation_calendar_icon_description" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_profile_24"
+        android:title="@string/navigation_profile_icon_description" />
+</menu>

@@ -8,4 +8,5 @@
     <color name="colorDarkBlue">#00008b</color>
     <color name="colorWhiteBlueShade">#DF949DCD</color>
     <color name="colorRed">#FF2424</color>
+    <color name="colorWhite">#FFF</color>
 </resources>
