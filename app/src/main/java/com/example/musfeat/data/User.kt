@@ -1,4 +1,4 @@
-package com.example.musfeat.domain
+package com.example.musfeat.data
 
 data class User(
     val uid: String,

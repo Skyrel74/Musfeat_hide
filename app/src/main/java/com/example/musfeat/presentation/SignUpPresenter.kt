@@ -1,8 +1,8 @@
 package com.example.musfeat.presentation
 
 import com.example.musfeat.architecture.BasePresenter
-import com.example.musfeat.domain.MusicalInstrument
-import com.example.musfeat.domain.User
+import com.example.musfeat.data.MusicalInstrument
+import com.example.musfeat.data.User
 import com.example.musfeat.view.signUp.SignUpView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
