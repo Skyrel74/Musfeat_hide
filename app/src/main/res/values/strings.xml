@@ -36,5 +36,10 @@
     <string name="registration_choose_skills">Выберите ваши навыки:</string>
     <string name="registration_success">Регистрация прошла успешно</string>
 
+
+    <!-- Calendar -->
+    <string name="event_title">Название</string>
+    <string name="event_date">Дата</string>
+
     <!-- Profile -->
 </resources>

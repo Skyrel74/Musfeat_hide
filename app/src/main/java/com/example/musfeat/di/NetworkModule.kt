@@ -15,6 +15,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 class NetworkModule {
+
     @Provides
     @Singleton
     fun provideEventApi(): EventApi = Retrofit.Builder()
@@ -29,4 +30,3 @@ class NetworkModule {
         .build()
         .create()
 }
-

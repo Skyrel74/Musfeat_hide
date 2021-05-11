@@ -13,7 +13,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.events_item.*
 
 class CalendarAdapter(private val onEventClick: (Event) -> Unit) :
-    androidx.recyclerview.widget.ListAdapter<Event, CalendarAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Event>() {
+    androidx.recyclerview.widget.ListAdapter<Event, CalendarAdapter.ViewHolder>(object :
+        DiffUtil.ItemCallback<Event>() {
 
         override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
             return oldItem.name == newItem.name
@@ -24,26 +25,19 @@ class CalendarAdapter(private val onEventClick: (Event) -> Unit) :
         }
     }) {
 
-
     class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
         LayoutContainer
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        return ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.events_item, parent, false)
         )
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         val item = getItem(position)
 
         holder.tvEventName.text = item.name
         holder.tvEventDate.text = item.date
-        if(item.name.length > 10){
-            holder.tvEventName.text = item.name.substring(0,11)+"..."
-        }
         Glide.with(holder.containerView.context)
             .load(item?.eventImageView)
             .apply(RequestOptions.circleCropTransform())

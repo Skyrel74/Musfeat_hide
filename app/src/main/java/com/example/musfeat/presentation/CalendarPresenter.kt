@@ -10,10 +10,8 @@ import kotlinx.coroutines.launch
 import moxy.presenterScope
 import javax.inject.Inject
 
-
 class CalendarPresenter @Inject constructor(private val getEventsUseCase: GetEventsUseCase) :
     BasePresenter<CalendarView>() {
-
 
     lateinit var events: List<Event>
 
@@ -22,14 +20,13 @@ class CalendarPresenter @Inject constructor(private val getEventsUseCase: GetEve
 
         viewState.showLoading(isShow = true)
 
-        presenterScope.launch(CoroutineExceptionHandler { context, throwable ->
+        presenterScope.launch(CoroutineExceptionHandler { _, error ->
+            Log.e("tag", error.message, error)
             viewState.showLoading(isShow = false)
-            Log.e("tag", throwable.message, throwable)
         }) {
             events = getEventsUseCase()
             viewState.setEvents(events)
             viewState.showLoading(isShow = false)
-
         }
     }
 }

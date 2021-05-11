@@ -13,6 +13,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.toolbar?.title = getString(R.string.map_title)
+        activity?.toolbar?.title = getString(R.string.profile_title)
     }
 }

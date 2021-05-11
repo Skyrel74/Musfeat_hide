@@ -1,6 +1,5 @@
 package com.example.musfeat.view.calendar
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -10,31 +9,25 @@ import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.Event
 import com.example.musfeat.presentation.CalendarPresenter
-import com.example.musfeat.presentation.SignInPresenter
 import com.example.musfeat.view.calendar.adapter.CalendarAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import moxy.ktx.moxyPresenter
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView {
 
-
     @Inject
     lateinit var calendarPresenter: CalendarPresenter
-
     private val presenter: CalendarPresenter by moxyPresenter { calendarPresenter }
-
     private var calendarAdapter: CalendarAdapter? = null
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.calendar_title)
-        with(rvEvents) {
+        with(rvCalendar) {
             layoutManager = GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
             adapter = CalendarAdapter(onEventClick = {
                 // Переход на on DetailFragment

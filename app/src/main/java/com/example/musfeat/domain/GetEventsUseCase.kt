@@ -12,7 +12,7 @@ class GetEventsUseCase @Inject constructor(private val eventApi: EventApi) {
         eventApi.getEvents().run {
             results?.mapNotNull { event ->
                 Event(
-                    name = event.title ?: return@mapNotNull null,
+                    name = eventNamePattern(event.title) ?: return@mapNotNull null,
                     date = event.dates?.get(0)?.date.toString(),
                     participantCount = event.favoritesCount.toString(),
                     eventImageView = event.images?.get(0)?.image ?: return@mapNotNull null,
@@ -20,6 +20,18 @@ class GetEventsUseCase @Inject constructor(private val eventApi: EventApi) {
                     url = event.siteUrl ?: "https://kudago.com/ekb/"
                 )
             } ?: emptyList()
+        }
+    }
+
+    private fun eventNamePattern(title: String?): String? {
+        return when (title) {
+            null -> null
+            else -> {
+                if (title.length > 10)
+                    title.substring(0, 11) + "..."
+                else
+                    title
+            }
         }
     }
 }
