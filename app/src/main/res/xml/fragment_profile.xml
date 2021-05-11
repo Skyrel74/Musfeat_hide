@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <PreferenceCategory
+        app:key="my_skills"
+        app:title="@string/profile_my_skills"
+        >
+
+        <SwitchPreferenceCompat
+            android:icon="@drawable/circle"
+            app:key="isDrummer"
+            app:title="@string/registration_drums" />
+        <SwitchPreferenceCompat
+            android:icon="@drawable/circle"
+            app:key="isVocalist"
+            app:title="@string/registration_vocal" />
+        <SwitchPreferenceCompat
+            android:icon="@drawable/circle"
+            app:key="isGuitarPlayer"
+            app:title="@string/registration_guitar" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/profile_looking_for"
+        app:key="looking_for">
+        <SwitchPreferenceCompat
+            android:icon="@drawable/circle"
+            app:key="isLookingForDrummer"
+            app:title="@string/registration_drums" />
+        <SwitchPreferenceCompat
+            android:icon="@drawable/circle"
+            app:key="isLookingForVocalist"
+            app:title="@string/registration_vocal" />
+        <SwitchPreferenceCompat
+            android:icon="@drawable/circle"
+            app:key="isLookingForGuitarPlayer"
+            app:title="@string/registration_guitar" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/profile_my_location"
+        app:key="my_location">
+        <!--TODO: location list-->
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
