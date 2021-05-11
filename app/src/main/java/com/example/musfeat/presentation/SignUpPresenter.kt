@@ -2,9 +2,11 @@ package com.example.musfeat.presentation
 
 import com.example.musfeat.architecture.BasePresenter
 import com.example.musfeat.data.MusicalInstrument
+import com.example.musfeat.data.User
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.view.signUp.SignUpView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -42,38 +44,35 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
         password.isEmpty() || repeatPassword.isEmpty() -> viewState.showError("Заполните поля 'Пароль'")
         password != repeatPassword -> viewState.showError("Пароли не совпадают")
         else -> {
-            FirestoreUtil.initCurrentUserIfFirstTime {
-                FirestoreUtil.updateCurrentUser(
-                    FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                    name,
-                    surname,
-                    email,
-                    musicalInstruments
-                )
-                viewState.toSignInFragment(email, password)
-            }
-            /**
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-            val firebaseUser = FirebaseAuth.getInstance().currentUser
-            val user = User(
-            firebaseUser.uid,
-            name,
-            surname,
-            email,
-            musicalInstruments
-            )
-            FirebaseDatabase.getInstance().getReference("users")
-            .child(FirebaseAuth.getInstance().currentUser.uid)
-            .setValue(user)
+                if (task.isSuccessful) {
+                    val user = User(
+                        FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                        name,
+                        surname,
+                        email,
+                        musicalInstruments
+                    )
+                    FirebaseDatabase.getInstance().getReference("users")
+                        .child(FirebaseAuth.getInstance().currentUser!!.uid)
+                        .setValue(user)
 
-            viewState.toSignInFragment(email, password)
-            } else {
-            viewState.showError("Создать аккаунт не получилось, попробуйте позже")
+                    FirestoreUtil.initCurrentUserIfFirstTime {
+                        FirestoreUtil.updateCurrentUser(
+                            FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                            name,
+                            surname,
+                            email,
+                            musicalInstruments
+                        )
+                        viewState.toSignInFragment(email, password)
+                    }
+                    viewState.toSignInFragment(email, password)
+                } else {
+                    viewState.showError("Создать аккаунт не получилось, попробуйте позже")
+                }
             }
-            }
-             */
         }
     }
 }
