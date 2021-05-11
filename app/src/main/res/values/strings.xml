@@ -40,6 +40,9 @@
     <!-- Calendar -->
     <string name="event_title">Название</string>
     <string name="event_date">Дата</string>
+    <string name="profile_looking_for">Я ищу</string>
+    <string name="profile_my_skills">Мои навыки:</string>
+    <string name="profile_my_location">Моё местонахождение:</string>
 
     <!-- Profile -->
 </resources>

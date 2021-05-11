@@ -9,6 +9,7 @@ buildscript {
         glideVersion = '4.12.0'
         retrofitVersion = '2.9.0'
         coroutinesVersion = '1.4.1'
+        preferenceVersion = '1.1.1'
     }
 
     repositories {
