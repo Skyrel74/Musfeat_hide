@@ -5,11 +5,13 @@
     <!-- Toolbar titles -->
     <string name="cards_title">Поиск музыкантов</string>
     <string name="map_title">Карта</string>
+    <string name="chat_title">Чат</string>
     <string name="calendar_title">Календарь</string>
     <string name="profile_title">Профиль</string>
     <!-- Navigation titles -->
     <string name="navigation_cards_icon_description">Карточки</string>
     <string name="navigation_map_icon_description">Карта</string>
+    <string name="navigation_chat_icon_description">Чат</string>
     <string name="navigation_calendar_icon_description">Календарь</string>
     <string name="navigation_profile_icon_description">Профиль</string>
     <!-- Back button description -->

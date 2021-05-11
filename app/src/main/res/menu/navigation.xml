@@ -12,6 +12,11 @@
         android:title="@string/navigation_map_icon_description" />
 
     <item
+        android:id="@+id/navigation_chat"
+        android:icon="@drawable/ic_chat_24"
+        android:title="@string/navigation_chat_icon_description" />
+
+    <item
         android:id="@+id/navigation_calendar"
         android:icon="@drawable/ic_calendar_24"
         android:title="@string/navigation_calendar_icon_description" />

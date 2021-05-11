@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.core.view.isVisible
 import com.example.musfeat.architecture.BaseActivity
 import com.example.musfeat.view.calendar.CalendarFragment
+import com.example.musfeat.view.chat.ChatFragment
 import com.example.musfeat.view.map.MapFragment
 import com.example.musfeat.view.profile.ProfileFragment
 import com.example.musfeat.view.signIn.SignInFragment
@@ -74,6 +75,13 @@ class MainActivity : BaseActivity() {
                         toolbar?.title = getString(R.string.map_title)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, MapFragment())
+                            .commit()
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.navigation_chat -> {
+                        toolbar?.title = getString(R.string.chat_title)
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, ChatFragment())
                             .commit()
                         return@OnNavigationItemSelectedListener true
                     }

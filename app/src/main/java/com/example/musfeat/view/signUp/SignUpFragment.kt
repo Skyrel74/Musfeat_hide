@@ -14,6 +14,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.MainActivity
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
+import com.example.musfeat.data.MusicalInstrument
 import com.example.musfeat.presentation.SignUpPresenter
 import com.example.musfeat.view.signIn.SignInFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -318,12 +319,18 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
 
         btnCreateAccount.setOnClickListener {
             (activity as MainActivity).showProgressBar(true)
+            val musicalInstruments = mutableListOf<MusicalInstrument>()
+            if (cbGuitar.isChecked) musicalInstruments.add(MusicalInstrument.GUITAR)
+            if (cbVocal.isChecked) musicalInstruments.add(MusicalInstrument.VOCAL)
+            if (cbDrums.isChecked) musicalInstruments.add(MusicalInstrument.DRUM)
+            if (musicalInstruments.isEmpty()) musicalInstruments.add(MusicalInstrument.NONE)
             presenter.checkData(
                 etNameReg.text.toString().trim(),
                 etSurnameReg.text.toString().trim(),
                 etEmailReg.text.toString().trim(),
                 etPasswordReg.text.toString().trim(),
-                etPasswordRegRepeat.text.toString().trim()
+                etPasswordRegRepeat.text.toString().trim(),
+                musicalInstruments
             )
         }
     }

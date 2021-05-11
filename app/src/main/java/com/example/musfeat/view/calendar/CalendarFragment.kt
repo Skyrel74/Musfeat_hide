@@ -1,5 +1,6 @@
 package com.example.musfeat.view.calendar
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -28,7 +29,9 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView 
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.calendar_title)
         with(rvCalendar) {
-            layoutManager = GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
+            val spanCount =
+                if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 5
+            layoutManager = GridLayoutManager(context, spanCount, GridLayoutManager.VERTICAL, false)
             adapter = CalendarAdapter(onEventClick = {
                 // Переход на on DetailFragment
             }).also {
