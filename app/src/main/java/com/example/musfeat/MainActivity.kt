@@ -15,19 +15,28 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), MainView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wrapper)
         setSupportActionBar(toolbar)
-        setStartupFragment(savedInstanceState)
+        setStartupFragment()
+        setListeners()
     }
 
-    private fun setStartupFragment(savedInstanceState: Bundle?) {
-
-        if (savedInstanceState == null) {
+    override fun setStartupFragment() {
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            toolbar.title = getString(R.string.cards_title)
+            showNavView(true)
+            showBackBtn(true)
+            supportFragmentManager.beginTransaction()
+                .add(R.id.container, SwipeFragment())
+                .commit()
+        } else {
             toolbar.title = getString(R.string.login_title)
+            showNavView(false)
+            showBackBtn(false)
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.container, SignInFragment())
@@ -35,18 +44,13 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun showProgressBar(isVisible: Boolean = true) {
-        pbLoading.isVisible = isVisible
-    }
-
-    fun showBackBtn(isVisible: Boolean = true) {
-        backIv.isVisible = isVisible
-
-        if (backIv.isVisible) {
-            showNavView(false)
-            backIv.setOnClickListener {
-                val activeFragment =
-                    supportFragmentManager.findFragmentById(R.id.container)?.childFragmentManager?.primaryNavigationFragment
+    override fun setListeners() {
+        backIv.setOnClickListener {
+            if (it.isVisible) {
+                val activeFragment = supportFragmentManager
+                    .findFragmentById(R.id.container)
+                    ?.childFragmentManager
+                    ?.primaryNavigationFragment
                 if (activeFragment !is SignUpFragment)
                     FirebaseAuth.getInstance().signOut()
 
@@ -55,10 +59,6 @@ class MainActivity : BaseActivity() {
                     .commit()
             }
         }
-    }
-
-    fun showNavView(isVisible: Boolean) {
-        navView.isVisible = isVisible
 
         if (navView.isVisible)
             navView.setOnNavigationItemSelectedListener OnNavigationItemSelectedListener@{ item ->
@@ -102,5 +102,17 @@ class MainActivity : BaseActivity() {
                 }
                 return@OnNavigationItemSelectedListener false
             }
+    }
+
+    override fun showProgressBar(isVisible: Boolean) {
+        pbLoading.isVisible = isVisible
+    }
+
+    override fun showBackBtn(isVisible: Boolean) {
+        backIv.isVisible = isVisible
+    }
+
+    override fun showNavView(isVisible: Boolean) {
+        navView.isVisible = isVisible
     }
 }

@@ -30,11 +30,17 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
     @Inject
     lateinit var registrationPresenter: SignUpPresenter
 
+    override fun onStart() {
+        super.onStart()
+        activity?.toolbar?.title = getString(R.string.registration_title)
+        (activity as MainActivity).showBackBtn(true)
+        (activity as MainActivity).showNavView(false)
+    }
+
     private val presenter: SignUpPresenter by moxyPresenter { registrationPresenter }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.toolbar?.title = getString(R.string.registration_title)
         setListeners()
     }
 

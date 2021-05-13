@@ -7,7 +7,6 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.PreferenceFragmentCompat
@@ -86,7 +85,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
         activity?.toolbar?.title = getString(R.string.profile_title)
         (activity as MainActivity).showProgressBar(true)
         FirestoreUtil.getCurrentUser { user ->
-            Log.d("DEBUG", StorageUtil.pathToReference(user.userPicturePath!!).toString())
             if (this@ProfileFragment.isVisible) {
                 if (!pictureJustChanged && user.userPicturePath != null)
                     GlideApp.with(this)
@@ -111,7 +109,6 @@ class SettingFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         //sample code to get
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context)
         val isGuitarPlayer = sharedPreferences.getBoolean("isGuitarPlayer", false)

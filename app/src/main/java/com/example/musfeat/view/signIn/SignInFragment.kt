@@ -61,6 +61,9 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
 
     override fun onStart() {
         super.onStart()
+        activity?.toolbar?.title = getString(R.string.login_title)
+        (activity as MainActivity).showBackBtn(false)
+        (activity as MainActivity).showNavView(false)
         val currentUser: FirebaseUser? = auth.currentUser
         if (currentUser != null)
             toSwipeFragment()
@@ -74,9 +77,6 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
-        activity?.toolbar?.title = getString(R.string.login_title)
-        (activity as MainActivity).showBackBtn(false)
-        (activity as MainActivity).showNavView(false)
     }
 
     @SuppressLint("ClickableViewAccessibility")
