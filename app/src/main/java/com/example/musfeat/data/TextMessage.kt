@@ -6,8 +6,7 @@ data class TextMessage(
     val text: String,
     override val time: Date,
     override val senderId: String,
-    override val type: String = MessageType.TEXT
+    override val messageType: String = MessageType.TEXT
 ) : Message {
-
     constructor() : this("", Date(0), "")
 }

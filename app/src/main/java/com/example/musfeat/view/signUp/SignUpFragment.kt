@@ -11,11 +11,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.example.musfeat.MainActivity
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.MusicalInstrument
 import com.example.musfeat.presentation.SignUpPresenter
+import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.signIn.SignInFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*

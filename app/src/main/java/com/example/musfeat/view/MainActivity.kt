@@ -1,7 +1,8 @@
-package com.example.musfeat
+package com.example.musfeat.view
 
 import android.os.Bundle
 import androidx.core.view.isVisible
+import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseActivity
 import com.example.musfeat.view.calendar.CalendarFragment
 import com.example.musfeat.view.chat.ChatFragment

@@ -1,4 +1,4 @@
-package com.example.musfeat
+package com.example.musfeat.view
 
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle

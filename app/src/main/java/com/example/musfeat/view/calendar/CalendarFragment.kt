@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.musfeat.MainActivity
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.Event
 import com.example.musfeat.presentation.CalendarPresenter
+import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.calendar.adapter.CalendarAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*

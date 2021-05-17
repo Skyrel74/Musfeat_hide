@@ -11,10 +11,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.example.musfeat.MainActivity
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.SignInPresenter
+import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.signUp.SignUpFragment
 import com.example.musfeat.view.swipe.SwipeFragment
 import com.google.firebase.auth.FirebaseAuth

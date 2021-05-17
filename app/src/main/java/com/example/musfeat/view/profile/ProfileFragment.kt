@@ -12,13 +12,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
-import com.example.musfeat.MainActivity
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.glide.GlideApp
 import com.example.musfeat.presentation.ProfilePresenter
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.util.StorageUtil
+import com.example.musfeat.view.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_profile.*

@@ -11,6 +11,7 @@ buildscript {
         retrofitVersion = '2.9.0'
         coroutinesVersion = '1.4.1'
         preferenceVersion = '1.1.1'
+        groupieVersion = '2.0.3'
     }
 
     repositories {
