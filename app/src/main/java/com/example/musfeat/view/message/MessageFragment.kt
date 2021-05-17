@@ -27,14 +27,16 @@ class MessageFragment : BaseFragment(R.layout.fragment_message) {
 
     private var uName: String? = null
     private var uId: String? = null
+    private var channelId: String? = null
 
     companion object {
 
-        fun newInstance(uName: String, uId: String): MessageFragment {
+        fun newInstance(uName: String, uId: String, channelId: String): MessageFragment {
             val fragment = MessageFragment()
             val args = Bundle()
             args.putSerializable(AppConstants.USER_NAME, uName)
             args.putSerializable(AppConstants.USER_ID, uId)
+            args.putSerializable(AppConstants.CHANNEL_ID, channelId)
             fragment.arguments = args
             return fragment
         }
@@ -45,7 +47,8 @@ class MessageFragment : BaseFragment(R.layout.fragment_message) {
         if (arguments != null) {
             uName = requireArguments().getSerializable(AppConstants.USER_NAME) as String
             uId = requireArguments().getSerializable(AppConstants.USER_ID) as String
-            FirestoreUtil.getOrCreateChatChannel(uId!!) { channelId ->
+            channelId = requireArguments().getSerializable(AppConstants.CHANNEL_ID) as String
+            FirestoreUtil.getOrCreateChatChannel(channelId!!, uId!!) { channelId ->
                 messagesListenerRegistration =
                     FirestoreUtil.addChatMessagesListener(
                         channelId,

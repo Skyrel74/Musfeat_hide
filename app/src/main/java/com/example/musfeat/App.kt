@@ -9,4 +9,5 @@ class App : Application()
 object AppConstants {
     val USER_NAME = "USER_NAME"
     val USER_ID = "USER_ID"
+    val CHANNEL_ID = "CHANNEL_ID"
 }
