@@ -19,6 +19,8 @@ import com.example.musfeat.presentation.ProfilePresenter
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.util.StorageUtil
 import com.example.musfeat.view.MainActivity
+import com.example.musfeat.view.signIn.SignInFragment
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -77,6 +79,14 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
                 putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/jpeg", "image/png"))
             }
             resultLauncher.launch(intent)
+        }
+        //Setting logout button click to logout from firebase
+
+        logoutButton.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, SignInFragment())
+                .commit()
         }
         setSettingsFragment(savedInstanceState)
     }

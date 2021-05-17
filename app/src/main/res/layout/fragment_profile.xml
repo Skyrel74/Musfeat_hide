@@ -19,6 +19,20 @@
         app:strokeColor="@color/colorDarkBlue"
         app:strokeWidth="8dp" />
 
+    <TextView
+        android:id="@+id/profileDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@id/preferences"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileImg" />
+    <!--TODO fix margins-->
+    <!--TODO fix text-->
     <FrameLayout
         android:id="@+id/preferences"
         android:layout_width="match_parent"
@@ -27,8 +41,25 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@id/logoutButton"
+        app:layout_constraintEnd_toEndOf="@id/logoutButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileDescription" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="#7f0000"
+        android:text="@string/profile_logout"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileImg" />
+        app:layout_constraintTop_toBottomOf="@id/preferences" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
