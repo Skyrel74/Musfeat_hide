@@ -72,6 +72,14 @@ class MessageFragment : BaseFragment(R.layout.fragment_message) {
         }
     }
 
+    //todo hide nav view , configure backstack
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        (activity as MainActivity).showNavView(false)
+//
+//        super.onViewCreated(view, savedInstanceState)
+//    }
+
 
     private fun updateRecyclerView(messages: List<Item>) {
         fun init() {
