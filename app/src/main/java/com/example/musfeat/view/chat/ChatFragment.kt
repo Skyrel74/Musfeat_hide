@@ -68,7 +68,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
                     .replace(
                         R.id.container, MessageFragment.newInstance(
                             secondUser.name,
-                            secondUser.uid
+                            secondUser.uid,
+                            item.chat.channelId
                         )
                     )
                     .commit()
