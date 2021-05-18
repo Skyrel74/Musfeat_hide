@@ -7,6 +7,7 @@ import com.example.musfeat.architecture.BaseActivity
 import com.example.musfeat.view.calendar.CalendarFragment
 import com.example.musfeat.view.chat.ChatFragment
 import com.example.musfeat.view.map.MapFragment
+import com.example.musfeat.view.message.MessageFragment
 import com.example.musfeat.view.profile.ProfileFragment
 import com.example.musfeat.view.signIn.SignInFragment
 import com.example.musfeat.view.signUp.SignUpFragment
@@ -52,6 +53,12 @@ class MainActivity : BaseActivity(), MainView {
                     .findFragmentById(R.id.container)
                     ?.childFragmentManager
                     ?.primaryNavigationFragment
+                if (activeFragment is MessageFragment) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, ChatFragment())
+                        .commit()
+                    return@setOnClickListener
+                }
                 if (activeFragment !is SignUpFragment)
                     FirebaseAuth.getInstance().signOut()
 

@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 
 @AndroidEntryPoint
-class ChatFragment : BaseFragment(R.layout.fragment_chat) {
+class ChatFragment : BaseFragment(R.layout.fragment_chat), ChatView {
 
     private lateinit var chatListenerRegistration: ListenerRegistration
 
@@ -37,7 +37,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
         activity?.toolbar?.title = getString(R.string.chat_title)
     }
 
-    private fun updateRecyclerView(items: List<Item>) {
+    override fun updateRecyclerView(items: List<Item>) {
 
         fun init() {
             rvChats.apply {

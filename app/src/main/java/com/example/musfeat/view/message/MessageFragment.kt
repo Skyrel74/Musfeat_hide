@@ -1,6 +1,7 @@
 package com.example.musfeat.view.message
 
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musfeat.AppConstants
 import com.example.musfeat.R
@@ -8,6 +9,7 @@ import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.MessageType
 import com.example.musfeat.data.TextMessage
 import com.example.musfeat.util.FirestoreUtil
+import com.example.musfeat.view.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.GroupAdapter
@@ -15,11 +17,12 @@ import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_message.*
 import java.util.*
 
 @AndroidEntryPoint
-class MessageFragment : BaseFragment(R.layout.fragment_message) {
+class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
 
     private lateinit var messagesListenerRegistration: ListenerRegistration
     private var shouldInitRecyclerView = true
@@ -72,8 +75,23 @@ class MessageFragment : BaseFragment(R.layout.fragment_message) {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setSettingsFragment(savedInstanceState)
+    }
 
-    private fun updateRecyclerView(messages: List<Item>) {
+    override fun setSettingsFragment(savedInstanceState: Bundle?) {
+        activity?.toolbar?.title = uName
+        (activity as MainActivity).showNavView(false)
+        (activity as MainActivity).showBackBtn(true)
+        if (savedInstanceState == null)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.preferences, MessageFragment.newInstance(uName!!, uId!!, channelId!!))
+                .commit()
+    }
+
+
+    override fun updateRecyclerView(messages: List<Item>) {
         fun init() {
             rvMessages.apply {
                 layoutManager = LinearLayoutManager(requireContext())
