@@ -1,14 +1,23 @@
 package com.example.musfeat.view.message
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musfeat.AppConstants
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
+import com.example.musfeat.data.ImageMessage
 import com.example.musfeat.data.MessageType
 import com.example.musfeat.data.TextMessage
 import com.example.musfeat.util.FirestoreUtil
+import com.example.musfeat.util.StorageUtil
 import com.example.musfeat.view.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
@@ -19,18 +28,51 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_message.*
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 @AndroidEntryPoint
 class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
+
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val selectedImagePath = data?.data
+                val selectedImageBmp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val src: ImageDecoder.Source = ImageDecoder.createSource(
+                        requireActivity().contentResolver,
+                        selectedImagePath!!
+                    )
+                    ImageDecoder.decodeBitmap(src)
+                } else {
+                    @Suppress("DEPRECATION")
+                    MediaStore.Images.Media.getBitmap(
+                        requireActivity().contentResolver,
+                        selectedImagePath
+                    )
+                }
+                val outputStream = ByteArrayOutputStream()
+                selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                val selectedImageBytes = outputStream.toByteArray()
+                StorageUtil.uploadMessageImage(selectedImageBytes) { imagePath ->
+                    val messageToSend =
+                        ImageMessage(
+                            imagePath, Calendar.getInstance().time,
+                            FirebaseAuth.getInstance().currentUser!!.uid
+                        )
+                    FirestoreUtil.sendMessage(messageToSend, channelId)
+                }
+            }
+        }
 
     private lateinit var messagesListenerRegistration: ListenerRegistration
     private var shouldInitRecyclerView = true
     private lateinit var messageSection: Section
 
     private var uName: String? = null
-    private var uId: String? = null
-    private var channelId: String? = null
+    private lateinit var uId: String
+    private lateinit var channelId: String
 
     companion object {
         fun newInstance(uName: String, uId: String, channelId: String): MessageFragment {
@@ -65,7 +107,7 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
 
     override fun setSettingsFragment() {
 
-        FirestoreUtil.getOrCreateChatChannel(channelId!!, uId!!) { channelId ->
+        FirestoreUtil.getOrCreateChatChannel(channelId, uId) { channelId ->
             messagesListenerRegistration =
                 FirestoreUtil.addChatMessagesListener(
                     channelId,
@@ -83,7 +125,12 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
             }
 
             fabSendImage.setOnClickListener {
-                TODO("Send image messages")
+                val intent: Intent = Intent().apply {
+                    type = "image/*"
+                    action = Intent.ACTION_GET_CONTENT
+                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/jpeg", "image/png"))
+                }
+                resultLauncher.launch(intent)
             }
         }
 

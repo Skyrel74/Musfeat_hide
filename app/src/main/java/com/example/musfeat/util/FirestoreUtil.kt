@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.example.musfeat.data.*
 import com.example.musfeat.view.recyclerview.item.ChatItem
+import com.example.musfeat.view.recyclerview.item.ImageMessageItem
 import com.example.musfeat.view.recyclerview.item.TextMessageItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -90,7 +91,7 @@ object FirestoreUtil {
     fun removeListener(registration: ListenerRegistration) = registration.remove()
 
     fun addChatsListener(context: Context, onListen: (List<Item>) -> Unit): ListenerRegistration {
-        return currentUserDocRef.collection("engagedChatChannels")
+        return currentUserDocRef.collection("extra")
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 if (firebaseFirestoreException != null) {
                     Log.e("FIRESTORE", "Chat listener error.", firebaseFirestoreException)
@@ -109,8 +110,8 @@ object FirestoreUtil {
                             val messagesIds = mutableListOf<String>()
                             chatChannelsCollectionRef.document(channelId).collection("messages")
                                 .get().addOnSuccessListener {
-                                    it.documents.forEach {
-                                        messagesIds.add(it.id)
+                                    it.documents.forEach { ds ->
+                                        messagesIds.add(ds.id)
                                     }
                                     val chat = Chat(
                                         channelId, ds.data?.get("name").toString(),
@@ -129,7 +130,7 @@ object FirestoreUtil {
         otherUserId: String,
         onComplete: (channelId: String) -> Unit
     ) {
-        currentUserDocRef.collection("engagedChatChannels")
+        currentUserDocRef.collection("extra")
             .document("chats").get().addOnSuccessListener {
                 if (it.data?.get("channelIds").toString().contains(channelId)) {
                     onComplete(channelId)
@@ -142,29 +143,29 @@ object FirestoreUtil {
                 newChannel.set(ChatChannel(mutableListOf(currentUserId, otherUserId)))
 
                 currentUserDocRef
-                    .collection("engagedChatChannels")
+                    .collection("extra")
                     .document("chats")
-                    .get().addOnSuccessListener {
-                        var data = it.data?.get("channelIds").toString()
+                    .get().addOnSuccessListener { ds ->
+                        var data = ds.data?.get("channelIds").toString()
                         data = data.substring(1, data.length - 1)
                         val channelIds = mutableListOf(data)
                         channelIds.add(newChannel.id)
                         currentUserDocRef
-                            .collection("engagedChatChannels")
+                            .collection("extra")
                             .document("chats")
                             .set(mapOf("channelIds" to channelIds))
                     }
 
                 firestoreInstance.collection("users").document(otherUserId)
-                    .collection("engagedChatChannels")
+                    .collection("extra")
                     .document("chats")
-                    .get().addOnSuccessListener {
-                        var data = it.data?.get("channelIds").toString()
+                    .get().addOnSuccessListener { ds ->
+                        var data = ds.data?.get("channelIds").toString()
                         data = data.substring(1, data.length - 1)
                         val channelIds = mutableListOf(data)
                         channelIds.add(newChannel.id)
                         firestoreInstance.collection("users").document(otherUserId)
-                            .collection("engagedChatChannels")
+                            .collection("extra")
                             .document("chats")
                             .set(mapOf("channelIds" to channelIds))
                     }
@@ -190,7 +191,12 @@ object FirestoreUtil {
                     if (it["messageType"].toString() == MessageType.TEXT)
                         items.add(TextMessageItem(it.toObject(TextMessage::class.java)!!, context))
                     else
-                        Log.e("Something not right", it["messageType"].toString())
+                        items.add(
+                            ImageMessageItem(
+                                it.toObject(ImageMessage::class.java)!!,
+                                context
+                            )
+                        )
                 }
                 onListen(items)
             }

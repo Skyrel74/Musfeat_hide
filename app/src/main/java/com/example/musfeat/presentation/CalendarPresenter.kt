@@ -13,7 +13,7 @@ import javax.inject.Inject
 class CalendarPresenter @Inject constructor(private val getEventsUseCase: GetEventsUseCase) :
     BasePresenter<CalendarView>() {
 
-    lateinit var events: List<Event>
+    private lateinit var events: List<Event>
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

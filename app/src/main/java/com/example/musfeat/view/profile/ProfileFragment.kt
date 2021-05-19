@@ -31,7 +31,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
 
-    private lateinit var selectedImageBytes: ByteArray
     private var pictureJustChanged: Boolean = false
 
     private var resultLauncher =
@@ -54,7 +53,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
                 }
                 val outputStream = ByteArrayOutputStream()
                 selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
-                selectedImageBytes = outputStream.toByteArray()
+                val selectedImageBytes = outputStream.toByteArray()
                 StorageUtil.uploadProfilePhoto(selectedImageBytes) { imagePath ->
                     FirestoreUtil.updateCurrentUser(userPicturePath = imagePath)
                 }
