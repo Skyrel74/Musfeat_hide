@@ -31,16 +31,12 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat), ChatView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        chatListenerRegistration =
-            FirestoreUtil.addChatsListener(this.requireActivity(), this::updateRecyclerView)
-    }
-
-    override fun onStart() {
-        super.onStart()
         activity?.toolbar?.title = getString(R.string.chat_title)
         (activity as MainActivity).showNavView(true)
         (activity as MainActivity).showBackBtn(false)
+
+        chatListenerRegistration =
+            FirestoreUtil.addChatsListener(this.requireActivity(), this::updateRecyclerView)
     }
 
     override fun updateRecyclerView(items: List<Item>) {
@@ -65,7 +61,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat), ChatView {
             updateItems()
     }
 
-    private val onItemClick = OnItemClickListener { item, view ->
+    private val onItemClick = OnItemClickListener { item, _ ->
         if (item is ChatItem) {
             val secondId: String =
                 item.chat.usersIds.filter { it != FirebaseAuth.getInstance().currentUser!!.uid }[0]

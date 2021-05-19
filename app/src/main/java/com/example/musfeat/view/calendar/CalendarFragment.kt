@@ -25,15 +25,11 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView 
     private val presenter: CalendarPresenter by moxyPresenter { calendarPresenter }
     private var calendarAdapter: CalendarAdapter? = null
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.calendar_title)
         (activity as MainActivity).showNavView(true)
         (activity as MainActivity).showBackBtn(false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         with(rvCalendar) {
             val spanCount =
@@ -47,16 +43,16 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView 
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        calendarAdapter = null
-    }
-
     override fun showLoading(isShow: Boolean) {
         (activity as MainActivity).pbLoading.isVisible = isShow
     }
 
     override fun setEvents(events: List<Event>) {
         calendarAdapter?.submitList(events)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        calendarAdapter = null
     }
 }

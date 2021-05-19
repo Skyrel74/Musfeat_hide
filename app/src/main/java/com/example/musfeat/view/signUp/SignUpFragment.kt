@@ -23,24 +23,19 @@ import kotlinx.android.synthetic.main.fragment_sign_up.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
 
     @Inject
     lateinit var registrationPresenter: SignUpPresenter
 
-    override fun onStart() {
-        super.onStart()
-        activity?.toolbar?.title = getString(R.string.registration_title)
-        (activity as MainActivity).showBackBtn(true)
-        (activity as MainActivity).showNavView(false)
-    }
-
     private val presenter: SignUpPresenter by moxyPresenter { registrationPresenter }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.toolbar?.title = getString(R.string.registration_title)
+        (activity as MainActivity).showBackBtn(true)
+        (activity as MainActivity).showNavView(false)
         setListeners()
     }
 
@@ -209,6 +204,39 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
                         null,
                         null
                     )
+                    if (isPasswordsEquals())
+                        etPasswordRegRepeat.setCompoundDrawablesWithIntrinsicBounds(
+                            drawable,
+                            null,
+                            null,
+                            null
+                        )
+                    else {
+                        etPasswordRegRepeat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_lock_24,
+                            0,
+                            0,
+                            0
+                        )
+                        drawable =
+                            ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme)
+                        drawable = DrawableCompat.wrap(drawable!!)
+                        DrawableCompat.setTint(
+                            drawable!!,
+                            ResourcesCompat.getColor(resources, R.color.colorDefault, theme)
+                        )
+                        DrawableCompat.setTintMode(drawable!!, PorterDuff.Mode.SRC_IN)
+                        etPasswordRegRepeat.setCompoundDrawablesWithIntrinsicBounds(
+                            drawable,
+                            null,
+                            null,
+                            null
+                        )
+                        etPasswordRegRepeat.setCompoundDrawablesWithIntrinsicBounds(
+                            ResourcesCompat.getDrawable(resources, R.drawable.ic_lock_24, theme),
+                            null, null, null
+                        )
+                    }
                 } else {
                     etPasswordReg.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_lock_24,

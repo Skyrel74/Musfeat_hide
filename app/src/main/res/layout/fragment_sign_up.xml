@@ -1,132 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/fragment_registration"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/etNameReg"
+    <RelativeLayout
+        android:id="@+id/fragment_registration"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="60dp"
-        android:drawablePadding="10dp"
-        android:hint="@string/registration_name_hint"
-        android:inputType="text"
-        android:paddingBottom="20dp" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etSurnameReg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="25dp"
-        android:drawablePadding="10dp"
-        android:layout_below="@+id/etNameReg"
-        android:hint="@string/registration_surname_hint"
-        android:inputType="text"
-        android:paddingBottom="20dp" />
+        <EditText
+            android:id="@+id/etNameReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:hint="@string/registration_name_hint"
+            android:inputType="text"
+            android:paddingBottom="20dp" />
+
+        <EditText
+            android:id="@+id/etSurnameReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etNameReg"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:hint="@string/registration_surname_hint"
+            android:inputType="text"
+            android:paddingBottom="20dp" />
 
 
-    <EditText
-        android:id="@+id/etEmailReg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="25dp"
-        android:drawablePadding="10dp"
-        android:layout_below="@+id/etSurnameReg"
-        android:hint="@string/registration_email_hint"
-        android:inputType="textEmailAddress"
-        android:paddingBottom="20dp" />
+        <EditText
+            android:id="@+id/etEmailReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etSurnameReg"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:hint="@string/registration_email_hint"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="20dp" />
 
-    <EditText
-        android:id="@+id/etPasswordReg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etEmailReg"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="20dp"
-        android:drawablePadding="10dp"
-        android:paddingBottom="20dp"
-        android:hint="@string/registration_password_hint"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/etPasswordReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etEmailReg"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:hint="@string/registration_password_hint"
+            android:inputType="textPassword"
+            android:paddingBottom="20dp" />
 
-    <EditText
-        android:id="@+id/etPasswordRegRepeat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etPasswordReg"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="20dp"
-        android:drawablePadding="10dp"
-        android:hint="@string/registration_password_repeat_hint"
-        android:paddingBottom="20dp"
-        android:autofillHints="@string/registration_password_hint"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/etPasswordRegRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etPasswordReg"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="20dp"
+            android:autofillHints="@string/registration_password_hint"
+            android:drawablePadding="10dp"
+            android:hint="@string/registration_password_repeat_hint"
+            android:inputType="textPassword"
+            android:paddingBottom="20dp" />
 
-    <TextView
-        android:id="@+id/tvChooseSkills"
-        android:gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorDarkBlue"
-        android:layout_marginRight="20dp"
-        android:drawablePadding="10dp"
-        android:layout_below="@+id/etPasswordRegRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/registration_choose_skills" />
+        <TextView
+            android:id="@+id/tvChooseSkills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etPasswordRegRepeat"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="@string/registration_choose_skills"
+            android:textColor="@color/colorDarkBlue"
+            android:textSize="20sp" />
 
-    <CheckBox
-        android:id="@+id/cbGuitar"
-        android:layout_below="@+id/tvChooseSkills"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="20dp"
-        android:drawablePadding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/registration_guitar" />
+        <CheckBox
+            android:id="@+id/cbGuitar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvChooseSkills"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:text="@string/registration_guitar" />
 
-    <CheckBox
-        android:id="@+id/cbVocal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cbGuitar"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawablePadding="10dp"
-        android:text="@string/registration_vocal" />
+        <CheckBox
+            android:id="@+id/cbVocal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cbGuitar"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:text="@string/registration_vocal" />
 
-    <CheckBox
-        android:id="@+id/cbDrums"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cbVocal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawablePadding="10dp"
-        android:text="@string/registration_drums" />
+        <CheckBox
+            android:id="@+id/cbDrums"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cbVocal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="10dp"
+            android:text="@string/registration_drums" />
 
-    <Button
-        android:id="@+id/btnCreateAccount"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_below="@+id/cbDrums"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
-        android:background="#00008b"
-        android:text="@string/registration_button_registration"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnCreateAccount"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/cbDrums"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="30dp"
+            android:background="#00008b"
+            android:text="@string/registration_button_registration"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+    </RelativeLayout>
+</ScrollView>

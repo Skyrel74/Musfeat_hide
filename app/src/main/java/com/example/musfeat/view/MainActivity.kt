@@ -23,23 +23,17 @@ class MainActivity : BaseActivity(), MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wrapper)
         setSupportActionBar(toolbar)
-        setStartupFragment()
+        if (savedInstanceState == null)
+            setStartupFragment()
         setListeners()
     }
 
     override fun setStartupFragment() {
         if (FirebaseAuth.getInstance().currentUser != null) {
-            toolbar.title = getString(R.string.cards_title)
-            showNavView(true)
-            showBackBtn(true)
             supportFragmentManager.beginTransaction()
                 .add(R.id.container, SwipeFragment())
                 .commit()
         } else {
-            toolbar.title = getString(R.string.login_title)
-            showNavView(false)
-            showBackBtn(false)
-
             supportFragmentManager.beginTransaction()
                 .add(R.id.container, SignInFragment())
                 .commit()
@@ -61,10 +55,10 @@ class MainActivity : BaseActivity(), MainView {
         }
 
         if (navView.isVisible)
+            navView?.selectedItemId = R.id.navigation_cards
             navView.setOnNavigationItemSelectedListener OnNavigationItemSelectedListener@{ item ->
                 when (item.itemId) {
                     R.id.navigation_cards -> {
-                        toolbar?.title = getString(R.string.cards_title)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, SwipeFragment())
                             .commit()
@@ -72,28 +66,24 @@ class MainActivity : BaseActivity(), MainView {
 
                     }
                     R.id.navigation_map -> {
-                        toolbar?.title = getString(R.string.map_title)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, MapFragment())
                             .commit()
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.navigation_chat -> {
-                        toolbar?.title = getString(R.string.chat_title)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, ChatFragment())
                             .commit()
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.navigation_calendar -> {
-                        toolbar?.title = getString(R.string.calendar_title)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, CalendarFragment())
                             .commit()
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.navigation_profile -> {
-                        toolbar?.title = getString(R.string.profile_title)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, ProfileFragment())
                             .commit()

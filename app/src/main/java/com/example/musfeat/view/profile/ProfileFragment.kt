@@ -72,6 +72,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.toolbar?.title = getString(R.string.profile_title)
+        (activity as MainActivity).showNavView(true)
+        (activity as MainActivity).showBackBtn(false)
         profileImg.setOnClickListener {
             val intent: Intent = Intent().apply {
                 type = "image/*"
@@ -84,7 +87,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
     }
 
     override fun setSettingsFragment(savedInstanceState: Bundle?) {
-        activity?.toolbar?.title = getString(R.string.profile_title)
         (activity as MainActivity).showProgressBar(true)
         FirestoreUtil.getCurrentUser { user ->
             if (this@ProfileFragment.isVisible) {

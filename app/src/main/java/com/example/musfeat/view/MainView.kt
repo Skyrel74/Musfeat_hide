@@ -3,7 +3,6 @@ package com.example.musfeat.view
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.OneExecution
-import moxy.viewstate.strategy.alias.Skip
 
 interface MainView : MvpView {
 
@@ -16,7 +15,7 @@ interface MainView : MvpView {
     @AddToEndSingle
     fun showBackBtn(isVisible: Boolean = true)
 
-    @Skip
+    @OneExecution
     fun setStartupFragment()
 
     @OneExecution

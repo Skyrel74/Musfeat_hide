@@ -6,8 +6,8 @@ import moxy.viewstate.strategy.alias.OneExecution
 interface SignUpView : BaseView {
 
     @OneExecution
-    fun showError(message: String)
+    fun toSignInFragment(uid: String, email: String)
 
     @OneExecution
-    fun toSignInFragment(uid: String, email: String)
+    fun showError(message: String)
 }

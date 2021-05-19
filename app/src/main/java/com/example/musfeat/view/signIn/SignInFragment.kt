@@ -18,13 +18,11 @@ import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.signUp.SignUpFragment
 import com.example.musfeat.view.swipe.SwipeFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
@@ -47,6 +45,10 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
         }
     }
 
+    @Inject
+    lateinit var loginPresenter: SignInPresenter
+    private val presenter: SignInPresenter by moxyPresenter { loginPresenter }
+
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,30 +59,20 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
             uPassword = requireArguments().getSerializable(ARG_PASSWORD) as String
             presenter.signIn(uEmail!!, uPassword!!)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        activity?.toolbar?.title = getString(R.string.login_title)
-        (activity as MainActivity).showBackBtn(false)
-        (activity as MainActivity).showNavView(false)
-        val currentUser: FirebaseUser? = auth.currentUser
-        if (currentUser != null)
+        if (auth.currentUser != null)
             toSwipeFragment()
     }
 
-    @Inject
-    lateinit var loginPresenter: SignInPresenter
-
-    private val presenter: SignInPresenter by moxyPresenter { loginPresenter }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.toolbar?.title = getString(R.string.login_title)
+        (activity as MainActivity).showBackBtn(false)
+        (activity as MainActivity).showNavView(false)
         setListeners()
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setListeners() {
+    override fun setListeners() {
 
         etEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_email_24, 0, 0, 0)
         etPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_24, 0, 0, 0)
@@ -235,7 +227,6 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     @SuppressLint("ClickableViewAccessibility")
     private fun onTouchListener(editTextId: EditText) {
         editTextId.setOnTouchListener { _, event ->
-
             if (event.action == MotionEvent.ACTION_DOWN &&
                 editTextId.compoundDrawables[2] != null &&
                 event.x >= editTextId.right - editTextId.left - editTextId.compoundDrawables[2].bounds.width() &&
@@ -247,7 +238,8 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     }
 
     override fun toSignUpFragment() {
-        (activity as MainActivity).showBackBtn(true)
+        etEmail.setText("")
+        etPassword.setText("")
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SignUpFragment())
             .commit()
@@ -256,15 +248,11 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     override fun toSwipeFragment() {
         etEmail.setText("")
         etPassword.setText("")
-        (activity as MainActivity).showBackBtn(true)
-        (activity as MainActivity).showNavView(true)
-        activity?.navView?.selectedItemId = R.id.navigation_cards
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SwipeFragment())
             .commit()
     }
 
-    override fun showError(message: String) {
+    override fun showError(message: String) =
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-    }
 }
