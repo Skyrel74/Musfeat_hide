@@ -49,22 +49,14 @@ class MainActivity : BaseActivity(), MainView {
     override fun setListeners() {
         backIv.setOnClickListener {
             if (it.isVisible) {
-                val activeFragment = supportFragmentManager
-                    .findFragmentById(R.id.container)
-                    ?.childFragmentManager
-                    ?.primaryNavigationFragment
-                if (activeFragment is MessageFragment) {
-                    supportFragmentManager.beginTransaction()
+                when (supportFragmentManager.findFragmentById(R.id.container)) {
+                    is MessageFragment -> supportFragmentManager.beginTransaction()
                         .replace(R.id.container, ChatFragment())
                         .commit()
-                    return@setOnClickListener
+                    is SignUpFragment -> supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, SignInFragment())
+                        .commit()
                 }
-                if (activeFragment !is SignUpFragment)
-                    FirebaseAuth.getInstance().signOut()
-
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, SignInFragment())
-                    .commit()
             }
         }
 

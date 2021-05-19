@@ -19,6 +19,8 @@ import com.example.musfeat.presentation.ProfilePresenter
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.util.StorageUtil
 import com.example.musfeat.view.MainActivity
+import com.example.musfeat.view.signIn.SignInFragment
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -94,6 +96,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
             }
         }
         (activity as MainActivity).showProgressBar(false)
+        logoutButton.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, SignInFragment())
+                .commit()
+        }
         if (savedInstanceState == null)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.preferences, SettingFragment())

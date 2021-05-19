@@ -25,15 +25,22 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView 
     private val presenter: CalendarPresenter by moxyPresenter { calendarPresenter }
     private var calendarAdapter: CalendarAdapter? = null
 
+    override fun onStart() {
+        super.onStart()
+        activity?.toolbar?.title = getString(R.string.calendar_title)
+        (activity as MainActivity).showNavView(true)
+        (activity as MainActivity).showBackBtn(false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.toolbar?.title = getString(R.string.calendar_title)
+
         with(rvCalendar) {
             val spanCount =
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 5
             layoutManager = GridLayoutManager(context, spanCount, GridLayoutManager.VERTICAL, false)
             adapter = CalendarAdapter(onEventClick = {
-                // Переход на on DetailFragment
+                // TODO(Сделать подробнее о событиях)
             }).also {
                 calendarAdapter = it
             }

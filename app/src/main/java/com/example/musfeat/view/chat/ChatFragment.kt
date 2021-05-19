@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.util.FirestoreUtil
+import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.message.MessageFragment
 import com.example.musfeat.view.recyclerview.item.ChatItem
 import com.google.firebase.auth.FirebaseAuth
@@ -33,8 +34,13 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat), ChatView {
 
         chatListenerRegistration =
             FirestoreUtil.addChatsListener(this.requireActivity(), this::updateRecyclerView)
+    }
 
+    override fun onStart() {
+        super.onStart()
         activity?.toolbar?.title = getString(R.string.chat_title)
+        (activity as MainActivity).showNavView(true)
+        (activity as MainActivity).showBackBtn(false)
     }
 
     override fun updateRecyclerView(items: List<Item>) {

@@ -33,7 +33,6 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
     private var channelId: String? = null
 
     companion object {
-
         fun newInstance(uName: String, uId: String, channelId: String): MessageFragment {
             val fragment = MessageFragment()
             val args = Bundle()
@@ -47,47 +46,47 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            uName = requireArguments().getSerializable(AppConstants.USER_NAME) as String
-            uId = requireArguments().getSerializable(AppConstants.USER_ID) as String
-            channelId = requireArguments().getSerializable(AppConstants.CHANNEL_ID) as String
-            FirestoreUtil.getOrCreateChatChannel(channelId!!, uId!!) { channelId ->
-                messagesListenerRegistration =
-                    FirestoreUtil.addChatMessagesListener(
-                        channelId,
-                        this.requireContext(),
-                        this::updateRecyclerView
-                    )
+        uId = requireArguments().getSerializable(AppConstants.USER_ID) as String
+        channelId = requireArguments().getSerializable(AppConstants.CHANNEL_ID) as String
+        uName = requireArguments().getSerializable(AppConstants.USER_NAME) as String
+    }
 
-                ivSend.setOnClickListener {
-                    val messageToSend = TextMessage(
-                        etMessage.text.toString(), Calendar.getInstance().time,
-                        FirebaseAuth.getInstance().currentUser!!.uid, MessageType.TEXT
-                    )
-                    etMessage.setText("")
-                    FirestoreUtil.sendMessage(messageToSend, channelId)
-                }
-
-                fabSendImage.setOnClickListener {
-                    TODO("Send image messages")
-                }
-            }
-        }
+    override fun onStart() {
+        super.onStart()
+        activity?.toolbar?.title = uName
+        (activity as MainActivity).showNavView(false)
+        (activity as MainActivity).showBackBtn(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setSettingsFragment(savedInstanceState)
+        setSettingsFragment()
     }
 
-    override fun setSettingsFragment(savedInstanceState: Bundle?) {
-        activity?.toolbar?.title = uName
-        (activity as MainActivity).showNavView(false)
-        (activity as MainActivity).showBackBtn(true)
-        if (savedInstanceState == null)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.preferences, MessageFragment.newInstance(uName!!, uId!!, channelId!!))
-                .commit()
+    override fun setSettingsFragment() {
+
+        FirestoreUtil.getOrCreateChatChannel(channelId!!, uId!!) { channelId ->
+            messagesListenerRegistration =
+                FirestoreUtil.addChatMessagesListener(
+                    channelId,
+                    this.requireContext(),
+                    this::updateRecyclerView
+                )
+
+            ivSend.setOnClickListener {
+                val messageToSend = TextMessage(
+                    etMessage.text.toString(), Calendar.getInstance().time,
+                    FirebaseAuth.getInstance().currentUser!!.uid, MessageType.TEXT
+                )
+                etMessage.setText("")
+                FirestoreUtil.sendMessage(messageToSend, channelId)
+            }
+
+            fabSendImage.setOnClickListener {
+                TODO("Send image messages")
+            }
+        }
+
     }
 
 
