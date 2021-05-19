@@ -1,6 +1,7 @@
 package com.example.musfeat.view.message
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musfeat.AppConstants
 import com.example.musfeat.R
@@ -8,6 +9,7 @@ import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.MessageType
 import com.example.musfeat.data.TextMessage
 import com.example.musfeat.util.FirestoreUtil
+import com.example.musfeat.view.chat.ChatFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.GroupAdapter
@@ -70,22 +72,21 @@ class MessageFragment : BaseFragment(R.layout.fragment_message) {
                 }
             }
         }
+        //back button handle
+        val onBackPressedCallback = requireActivity().onBackPressedDispatcher
+            .addCallback(this) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, ChatFragment())
+                    .commit()
+            }
     }
 
     //todo hide nav view , configure backstack
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        (activity as MainActivity).showNavView(false)
-//
-//        super.onViewCreated(view, savedInstanceState)
-//    }
 
 
     private fun updateRecyclerView(messages: List<Item>) {
         fun init() {
             rvMessages.apply {
-                isNestedScrollingEnabled = false
-                setHasFixedSize(false)
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = GroupAdapter<ViewHolder>().apply {
                     messageSection = Section(messages)
