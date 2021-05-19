@@ -84,6 +84,8 @@ class MessageFragment : BaseFragment(R.layout.fragment_message) {
     private fun updateRecyclerView(messages: List<Item>) {
         fun init() {
             rvMessages.apply {
+                isNestedScrollingEnabled = false
+                setHasFixedSize(false)
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = GroupAdapter<ViewHolder>().apply {
                     messageSection = Section(messages)
