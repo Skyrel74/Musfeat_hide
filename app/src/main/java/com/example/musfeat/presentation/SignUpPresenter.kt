@@ -1,12 +1,13 @@
 package com.example.musfeat.presentation
 
+import android.util.Log
 import com.example.musfeat.architecture.BasePresenter
 import com.example.musfeat.data.MusicalInstrument
-import com.example.musfeat.data.User
+import com.example.musfeat.service.MyFirebaseMessagingService
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.view.signUp.SignUpView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -47,25 +48,21 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = User(
-                        FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                        name,
-                        surname,
-                        email,
-                        musicalInstruments
-                    )
-                    FirebaseDatabase.getInstance().getReference("users")
-                        .child(FirebaseAuth.getInstance().currentUser!!.uid)
-                        .setValue(user)
-
                     FirestoreUtil.initCurrentUserIfFirstTime {
-                        FirestoreUtil.updateCurrentUser(
-                            FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                            name,
-                            surname,
-                            email,
-                            musicalInstruments
-                        )
+
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+                            FirestoreUtil.updateCurrentUser(
+                                FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                                name,
+                                surname,
+                                email,
+                                musicalInstruments,
+                                token = it.result
+                            )
+                            MyFirebaseMessagingService.addTokenToFirestore(it.result)
+                            Log.d("FCM", it.result.toString())
+                        }
+
                         viewState.toSignInFragment(email, password)
                     }
                     viewState.toSignInFragment(email, password)

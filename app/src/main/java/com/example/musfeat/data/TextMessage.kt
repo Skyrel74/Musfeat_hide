@@ -8,5 +8,5 @@ data class TextMessage(
     override val senderId: String,
     override val messageType: String = MessageType.TEXT
 ) : Message {
-    constructor() : this("", Date(0), "")
+    constructor() : this("", Date(0), "", "")
 }

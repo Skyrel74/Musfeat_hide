@@ -2,6 +2,7 @@ package com.example.musfeat.view
 
 import android.os.Bundle
 import androidx.core.view.isVisible
+import com.example.musfeat.AppConstants
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseActivity
 import com.example.musfeat.view.calendar.CalendarFragment
@@ -30,6 +31,15 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun setStartupFragment() {
         if (FirebaseAuth.getInstance().currentUser != null) {
+            if (intent.hasExtra(AppConstants.NOTIFICATION_FLAG_CHAT)) {
+                val uName = intent.getStringExtra(AppConstants.USER_NAME)
+                val uId = intent.getStringExtra(AppConstants.USER_ID)
+                val channelId = intent.getStringExtra(AppConstants.CHANNEL_ID)
+                if (uName != null && uId != null && channelId != null)
+                    supportFragmentManager.beginTransaction()
+                        .add(R.id.container, MessageFragment.newInstance(uName, uId, channelId))
+                        .commit()
+            }
             supportFragmentManager.beginTransaction()
                 .add(R.id.container, SwipeFragment())
                 .commit()

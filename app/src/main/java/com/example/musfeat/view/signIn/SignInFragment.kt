@@ -59,8 +59,6 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
             uPassword = requireArguments().getSerializable(ARG_PASSWORD) as String
             presenter.signIn(uEmail!!, uPassword!!)
         }
-        if (auth.currentUser != null)
-            toSwipeFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,6 +66,8 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
         activity?.toolbar?.title = getString(R.string.login_title)
         (activity as MainActivity).showBackBtn(false)
         (activity as MainActivity).showNavView(false)
+        if (auth.currentUser != null)
+            toSwipeFragment()
         setListeners()
     }
 

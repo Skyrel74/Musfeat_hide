@@ -8,5 +8,5 @@ data class ImageMessage(
     override val senderId: String,
     override val messageType: String = MessageType.IMAGE
 ) : Message {
-    constructor() : this("", Date(0), "")
+    constructor() : this("", Date(0), "", "")
 }

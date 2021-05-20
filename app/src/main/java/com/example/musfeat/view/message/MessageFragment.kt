@@ -7,6 +7,7 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,8 +15,9 @@ import com.example.musfeat.AppConstants
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.ImageMessage
-import com.example.musfeat.data.MessageType
 import com.example.musfeat.data.TextMessage
+import com.example.musfeat.data.User
+import com.example.musfeat.service.MyFirebaseMessagingService
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.util.StorageUtil
 import com.example.musfeat.view.MainActivity
@@ -28,6 +30,7 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_message.*
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -73,6 +76,7 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
     private var uName: String? = null
     private lateinit var uId: String
     private lateinit var channelId: String
+    private lateinit var currentUser: User
 
     companion object {
         fun newInstance(uName: String, uId: String, channelId: String): MessageFragment {
@@ -88,6 +92,11 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirestoreUtil.getCurrentUser {
+            currentUser = it
+        }
+
         uId = requireArguments().getSerializable(AppConstants.USER_ID) as String
         channelId = requireArguments().getSerializable(AppConstants.CHANNEL_ID) as String
         uName = requireArguments().getSerializable(AppConstants.USER_NAME) as String
@@ -118,10 +127,11 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
             ivSend.setOnClickListener {
                 val messageToSend = TextMessage(
                     etMessage.text.toString(), Calendar.getInstance().time,
-                    FirebaseAuth.getInstance().currentUser!!.uid, MessageType.TEXT
+                    FirebaseAuth.getInstance().currentUser!!.uid
                 )
                 etMessage.setText("")
                 FirestoreUtil.sendMessage(messageToSend, channelId)
+                sendNotification(messageToSend.text)
             }
 
             fabSendImage.setOnClickListener {
@@ -131,6 +141,7 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
                     putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/jpeg", "image/png"))
                 }
                 resultLauncher.launch(intent)
+                sendNotification("Вы получили изображение.")
             }
         }
 
@@ -157,5 +168,25 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
             updateItems()
         if (rvMessages?.adapter?.itemCount != null)
             rvMessages.scrollToPosition(rvMessages.adapter!!.itemCount - 1)
+    }
+
+    private fun sendNotification(message: String) {
+        val to = JSONObject()
+        val data = JSONObject()
+
+        data.put("title", currentUser.name)
+        data.put("body", currentUser.name)
+        data.put("message", message)
+        data.put("uName", currentUser.name)
+        data.put("uId", currentUser.uid)
+        data.put("channelId", channelId)
+        data.put("notificationFLag", AppConstants.NOTIFICATION_FLAG_CHAT)
+
+        FirestoreUtil.getFCMRegistrationTokens(uId) {
+            to.put("to", it)
+            to.put("data", data)
+            Log.e("TAG", to.toString())
+            MyFirebaseMessagingService.sendNotification(requireContext(), to)
+        }
     }
 }

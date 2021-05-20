@@ -31,7 +31,8 @@ object FirestoreUtil {
                     "",
                     "",
                     listOf(MusicalInstrument.NONE),
-                    null
+                    null,
+                    ""
                 )
                 currentUserDocRef.set(newUser).addOnSuccessListener {
                     onComplete()
@@ -45,7 +46,7 @@ object FirestoreUtil {
     fun updateCurrentUser(
         uid: String = "", name: String = "", surname: String = "", email: String = "",
         musicalInstrument: List<MusicalInstrument> = listOf(),
-        userPicturePath: String? = null
+        userPicturePath: String? = null, token: String? = null
     ) {
         val userFieldMap = mutableMapOf<String, Any>()
         if (uid.isNotBlank()) userFieldMap["uid"] = uid
@@ -54,6 +55,7 @@ object FirestoreUtil {
         if (email.isNotBlank()) userFieldMap["email"] = email
         if (musicalInstrument.isNotEmpty()) userFieldMap["musicalInstrument"] = musicalInstrument
         if (userPicturePath != null) userFieldMap["userPicturePath"] = userPicturePath
+        if (token != null) userFieldMap["token"] = token
         currentUserDocRef.update(userFieldMap)
     }
 
@@ -206,5 +208,15 @@ object FirestoreUtil {
         chatChannelsCollectionRef.document(channelId)
             .collection("messages")
             .add(message)
+    }
+
+    fun getFCMRegistrationTokens(userId: String, onComplete: (token: String?) -> Unit) {
+        getUserByUid(userId) {
+            onComplete(it.registrationTokens)
+        }
+    }
+
+    fun setFCMRegistrationTokens(registrationTokens: MutableList<String>) {
+        currentUserDocRef.update(mapOf("registrationTokens" to registrationTokens))
     }
 }

@@ -36,4 +36,22 @@ class ChatItem(
     }
 
     override fun getLayout(): Int = R.layout.item_chat
+
+    override fun isSameAs(other: com.xwray.groupie.Item<*>?): Boolean {
+        if (other !is ChatItem)
+            return false
+        if (this.chat != other.chat)
+            return false
+        return true
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return isSameAs(other as? ChatItem)
+    }
+
+    override fun hashCode(): Int {
+        var result = chat.hashCode()
+        result = 31 * result + context.hashCode()
+        return result
+    }
 }
