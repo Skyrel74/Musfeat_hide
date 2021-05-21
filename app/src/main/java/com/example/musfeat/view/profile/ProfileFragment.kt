@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
+import com.example.musfeat.data.MusicalInstrument
 import com.example.musfeat.glide.GlideApp
 import com.example.musfeat.presentation.ProfilePresenter
 import com.example.musfeat.util.FirestoreUtil
@@ -74,6 +75,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
         activity?.toolbar?.title = getString(R.string.profile_title)
         (activity as MainActivity).showNavView(true)
         (activity as MainActivity).showBackBtn(false)
+
+        FirestoreUtil.getCurrentUser { user ->
+            tilName?.editText?.setText(user.name)
+            tilSurname?.editText?.setText(user.surname)
+            tilDescription?.editText?.setText(user.description)
+        }
+
         profileImg.setOnClickListener {
             val intent: Intent = Intent().apply {
                 type = "image/*"
@@ -108,6 +116,32 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
                 .replace(R.id.preferences, SettingFragment())
                 .commit()
     }
+
+    override fun onDestroyView() {
+        val musicalInstrument = mutableListOf<MusicalInstrument>()
+        val preference = PreferenceManager.getDefaultSharedPreferences(this.context)
+        val isDrummer = preference.getBoolean("isDrummer", false)
+        val isVocalist = preference.getBoolean("isVocalist", false)
+        val isGuitarPlayer = preference.getBoolean("isGuitarPlayer", false)
+
+        if (isDrummer) musicalInstrument.add(MusicalInstrument.DRUM)
+        if (isVocalist) musicalInstrument.add(MusicalInstrument.VOCAL)
+        if (isGuitarPlayer) musicalInstrument.add(MusicalInstrument.GUITAR)
+        if (musicalInstrument.size == 0) musicalInstrument.add(MusicalInstrument.NONE)
+
+        val name = tilName?.editText?.text.toString()
+        val surname = tilSurname?.editText?.text.toString()
+        val description = tilDescription?.editText?.text.toString()
+
+        FirestoreUtil.updateCurrentUser(
+            name = name,
+            surname = surname,
+            description = description,
+            musicalInstrument = musicalInstrument
+        )
+
+        super.onDestroyView()
+    }
 }
 
 class SettingFragment : PreferenceFragmentCompat() {
@@ -118,9 +152,33 @@ class SettingFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //sample code to get
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context)
-        val isGuitarPlayer = sharedPreferences.getBoolean("isGuitarPlayer", false)
+
+        val preference = PreferenceManager.getDefaultSharedPreferences(this.context)
+        FirestoreUtil.getCurrentUser { user ->
+            if (user.musicalInstrument.contains(MusicalInstrument.NONE))
+                preference
+                    .edit()
+                    .putBoolean("isDrummer", false)
+                    .putBoolean("isVocalist", false)
+                    .putBoolean("isGuitarPlayer", false)
+                    .apply()
+            if (user.musicalInstrument.contains(MusicalInstrument.DRUM))
+                preference
+                    .edit()
+                    .putBoolean("isDrummer", true)
+                    .apply()
+            if (user.musicalInstrument.contains(MusicalInstrument.VOCAL))
+                preference
+                    .edit()
+                    .putBoolean("isVocalist", true)
+                    .apply()
+            if (user.musicalInstrument.contains(MusicalInstrument.GUITAR))
+                preference
+                    .edit()
+                    .putBoolean("isGuitarPlayer", true)
+                    .apply()
+        }
+
         val isGuitarPlayerPref: SwitchPreferenceCompat? = findPreference("isGuitarPlayer")
         isGuitarPlayerPref!!.setIcon(R.drawable.ic_eye_24)
     }

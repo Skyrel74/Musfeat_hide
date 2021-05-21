@@ -30,6 +30,7 @@ object FirestoreUtil {
                     "",
                     "",
                     "",
+                    "",
                     listOf(MusicalInstrument.NONE),
                     null,
                     ""
@@ -45,7 +46,7 @@ object FirestoreUtil {
 
     fun updateCurrentUser(
         uid: String = "", name: String = "", surname: String = "", email: String = "",
-        musicalInstrument: List<MusicalInstrument> = listOf(),
+        musicalInstrument: List<MusicalInstrument> = listOf(), description: String = "",
         userPicturePath: String? = null, registrationTokens: String? = null
     ) {
         val userFieldMap = mutableMapOf<String, Any>()
@@ -53,6 +54,7 @@ object FirestoreUtil {
         if (name.isNotBlank()) userFieldMap["name"] = name
         if (surname.isNotBlank()) userFieldMap["surname"] = surname
         if (email.isNotBlank()) userFieldMap["email"] = email
+        if (description.isNotBlank()) userFieldMap["description"] = description
         if (musicalInstrument.isNotEmpty()) userFieldMap["musicalInstrument"] = musicalInstrument
         if (userPicturePath != null) userFieldMap["userPicturePath"] = userPicturePath
         if (registrationTokens != null) userFieldMap["registrationTokens"] = registrationTokens
