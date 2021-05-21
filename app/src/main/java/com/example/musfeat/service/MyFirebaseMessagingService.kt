@@ -168,7 +168,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val uName = remoteMessage.data["uName"]
             val uId = remoteMessage.data["uId"]
             val channelId = remoteMessage.data["channelId"]
-            val notificationFLag = remoteMessage.data["notificationFLag"]
+            val notificationFlag = remoteMessage.data["notificationFlag"]
 
             showNotification(applicationContext, title, body)
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
@@ -178,7 +178,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     uId!!,
                     uName!!,
                     channelId!!,
-                    notificationFLag!!
+                    notificationFlag!!
                 )
             else
                 createNormalNotification(
@@ -187,7 +187,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     uId!!,
                     uName!!,
                     channelId!!,
-                    notificationFLag!!
+                    notificationFlag!!
                 )
         } else {
             val title = remoteMessage.notification!!.title

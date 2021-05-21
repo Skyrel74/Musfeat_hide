@@ -180,7 +180,7 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
         data.put("uName", currentUser.name)
         data.put("uId", currentUser.uid)
         data.put("channelId", channelId)
-        data.put("notificationFLag", AppConstants.NOTIFICATION_FLAG_CHAT)
+        data.put("notificationFlag", AppConstants.NOTIFICATION_FLAG_CHAT)
 
         FirestoreUtil.getFCMRegistrationTokens(uId) {
             to.put("to", it)

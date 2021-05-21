@@ -1,6 +1,7 @@
 package com.example.musfeat.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.core.view.isVisible
 import com.example.musfeat.AppConstants
 import com.example.musfeat.R
@@ -24,9 +25,9 @@ class MainActivity : BaseActivity(), MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wrapper)
         setSupportActionBar(toolbar)
+        setListeners()
         if (savedInstanceState == null)
             setStartupFragment()
-        setListeners()
     }
 
     override fun setStartupFragment() {
@@ -54,13 +55,14 @@ class MainActivity : BaseActivity(), MainView {
         backIv.setOnClickListener {
             if (it.isVisible) {
                 when (supportFragmentManager.findFragmentById(R.id.container)) {
-                    is MessageFragment -> supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, ChatFragment())
-                        .commit()
                     is SignUpFragment -> supportFragmentManager.beginTransaction()
                         .replace(R.id.container, SignInFragment())
                         .commit()
+                    else -> {
+                        navView.selectedItemId = R.id.navigation_chat
+                    }
                 }
+                Log.e("TAG", supportFragmentManager.findFragmentById(R.id.container).toString())
             }
         }
 
