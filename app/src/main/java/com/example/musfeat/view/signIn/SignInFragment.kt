@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
@@ -14,10 +15,13 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.SignInPresenter
+import com.example.musfeat.service.MyFirebaseMessagingService
+import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.signUp.SignUpFragment
 import com.example.musfeat.view.swipe.SwipeFragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_sign_in.*
@@ -248,6 +252,11 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     override fun toSwipeFragment() {
         etEmail.setText("")
         etPassword.setText("")
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            FirestoreUtil.updateCurrentUser(registrationTokens = it.result)
+            MyFirebaseMessagingService.addTokenToFirestore(it.result)
+            Log.d("FCM", it.result.toString())
+        }
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SwipeFragment())
             .commit()
