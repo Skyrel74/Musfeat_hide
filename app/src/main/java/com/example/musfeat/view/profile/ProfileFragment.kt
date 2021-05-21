@@ -118,8 +118,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
     }
 
     override fun onDestroyView() {
-        val musicalInstrument = mutableListOf<MusicalInstrument>()
         val preference = PreferenceManager.getDefaultSharedPreferences(this.context)
+
+        val musicalInstrument = mutableListOf<MusicalInstrument>()
         val isDrummer = preference.getBoolean("isDrummer", false)
         val isVocalist = preference.getBoolean("isVocalist", false)
         val isGuitarPlayer = preference.getBoolean("isGuitarPlayer", false)
@@ -128,6 +129,17 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
         if (isVocalist) musicalInstrument.add(MusicalInstrument.VOCAL)
         if (isGuitarPlayer) musicalInstrument.add(MusicalInstrument.GUITAR)
         if (musicalInstrument.size == 0) musicalInstrument.add(MusicalInstrument.NONE)
+
+        val searchSettings = mutableListOf<MusicalInstrument>()
+        val isLookingForDrummer = preference.getBoolean("isLookingForDrummer", false)
+        val isLookingForVocalist = preference.getBoolean("isLookingForVocalist", false)
+        val isLookingForGuitarPlayer = preference.getBoolean("isLookingForGuitarPlayer", false)
+
+        if (isLookingForDrummer) searchSettings.add(MusicalInstrument.DRUM)
+        if (isLookingForVocalist) searchSettings.add(MusicalInstrument.VOCAL)
+        if (isLookingForGuitarPlayer) searchSettings.add(MusicalInstrument.GUITAR)
+        if (searchSettings.size == 0) searchSettings.add(MusicalInstrument.NONE)
+
 
         val name = tilName?.editText?.text.toString()
         val surname = tilSurname?.editText?.text.toString()
@@ -139,6 +151,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
             description = description,
             musicalInstrument = musicalInstrument
         )
+
+        FirestoreUtil.setSearchSettings(searchSettings)
 
         super.onDestroyView()
     }
