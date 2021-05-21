@@ -244,6 +244,11 @@ class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
     override fun toSignUpFragment() {
         etEmail.setText("")
         etPassword.setText("")
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            FirestoreUtil.updateCurrentUser(registrationTokens = it.result)
+            MyFirebaseMessagingService.addTokenToFirestore(it.result)
+            Log.d("FCM", it.result.toString())
+        }
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, SignUpFragment())
             .commit()
