@@ -61,6 +61,23 @@ object FirestoreUtil {
         currentUserDocRef.update(userFieldMap)
     }
 
+    fun getSearchSettings(onComplete: (List<MusicalInstrument>) -> Unit) {
+        currentUserDocRef
+            .collection("extra")
+            .document("search")
+            .get()
+            .addOnSuccessListener {
+                onComplete(it.data?.get("channelIds") as List<MusicalInstrument>)
+            }
+    }
+
+    fun setSearchSettings(searchSettings: List<MusicalInstrument>) {
+        currentUserDocRef
+            .collection("extra")
+            .document("search")
+            .set(mapOf("searchSettings" to searchSettings))
+    }
+
     fun getCurrentUser(onComplete: (User) -> Unit) {
         currentUserDocRef.get().addOnSuccessListener {
             onComplete(it.toObject(User::class.java)!!)
