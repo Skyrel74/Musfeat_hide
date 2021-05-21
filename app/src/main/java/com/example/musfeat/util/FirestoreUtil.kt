@@ -46,7 +46,7 @@ object FirestoreUtil {
     fun updateCurrentUser(
         uid: String = "", name: String = "", surname: String = "", email: String = "",
         musicalInstrument: List<MusicalInstrument> = listOf(),
-        userPicturePath: String? = null, token: String? = null
+        userPicturePath: String? = null, registrationTokens: String? = null
     ) {
         val userFieldMap = mutableMapOf<String, Any>()
         if (uid.isNotBlank()) userFieldMap["uid"] = uid
@@ -55,7 +55,7 @@ object FirestoreUtil {
         if (email.isNotBlank()) userFieldMap["email"] = email
         if (musicalInstrument.isNotEmpty()) userFieldMap["musicalInstrument"] = musicalInstrument
         if (userPicturePath != null) userFieldMap["userPicturePath"] = userPicturePath
-        if (token != null) userFieldMap["token"] = token
+        if (registrationTokens != null) userFieldMap["registrationTokens"] = registrationTokens
         currentUserDocRef.update(userFieldMap)
     }
 
@@ -117,7 +117,7 @@ object FirestoreUtil {
                                     }
                                     val chat = Chat(
                                         channelId, ds.data?.get("name").toString(),
-                                        ds.data?.get("userIds") as List<String>, messagesIds
+                                        ds.data?.get("userIds") as MutableList<String>, messagesIds
                                     )
                                     items.add(ChatItem(chat, context))
                                     onListen(items)

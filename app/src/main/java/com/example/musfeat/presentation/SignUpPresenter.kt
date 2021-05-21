@@ -1,13 +1,10 @@
 package com.example.musfeat.presentation
 
-import android.util.Log
 import com.example.musfeat.architecture.BasePresenter
 import com.example.musfeat.data.MusicalInstrument
-import com.example.musfeat.service.MyFirebaseMessagingService
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.view.signUp.SignUpView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.messaging.FirebaseMessaging
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -50,18 +47,13 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
                 if (task.isSuccessful) {
                     FirestoreUtil.initCurrentUserIfFirstTime {
 
-                        FirebaseMessaging.getInstance().token.addOnCompleteListener {
-                            FirestoreUtil.updateCurrentUser(
-                                FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                                name,
-                                surname,
-                                email,
-                                musicalInstruments,
-                                token = it.result
-                            )
-                            MyFirebaseMessagingService.addTokenToFirestore(it.result)
-                            Log.d("FCM", it.result.toString())
-                        }
+                        FirestoreUtil.updateCurrentUser(
+                            FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                            name,
+                            surname,
+                            email,
+                            musicalInstruments
+                        )
 
                         viewState.toSignInFragment(email, password)
                     }
