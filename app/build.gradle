@@ -130,4 +130,7 @@ dependencies {
 
     // Volley
     implementation 'com.android.volley:volley:1.2.0'
+
+    // CardStackView
+    implementation "com.yuyakaido.android:card-stack-view:$cardStackViewVersion"
 }

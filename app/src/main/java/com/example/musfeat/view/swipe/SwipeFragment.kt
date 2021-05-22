@@ -7,18 +7,36 @@ import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.architecture.BaseView
 import com.example.musfeat.view.MainActivity
 import com.google.firebase.firestore.ListenerRegistration
+import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
+import kotlinx.android.synthetic.main.fragment_swipe.*
 
 @AndroidEntryPoint
 class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
 
     private lateinit var userListenerRegistration: ListenerRegistration
+    private var cardStackAdapter: CardStackAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.cards_title)
         (activity as MainActivity).showNavView(true)
         (activity as MainActivity).showBackBtn(false)
+
+        with(csvSwipe) {
+            layoutManager = CardStackLayoutManager(requireContext())
+            adapter = CardStackAdapter().also {
+                cardStackAdapter = it
+            }
+        }
+
+        //cardStackAdapter?.setData(dataSet)
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cardStackAdapter = null
     }
 }

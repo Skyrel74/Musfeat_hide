@@ -106,6 +106,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
         }
         (activity as MainActivity).showProgressBar(false)
         logoutButton.setOnClickListener {
+            saveData()
             FirebaseAuth.getInstance().signOut()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.container, SignInFragment())
@@ -118,43 +119,48 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
     }
 
     override fun onDestroyView() {
-        val preference = PreferenceManager.getDefaultSharedPreferences(this.context)
-
-        val musicalInstrument = mutableListOf<MusicalInstrument>()
-        val isDrummer = preference.getBoolean("isDrummer", false)
-        val isVocalist = preference.getBoolean("isVocalist", false)
-        val isGuitarPlayer = preference.getBoolean("isGuitarPlayer", false)
-
-        if (isDrummer) musicalInstrument.add(MusicalInstrument.DRUM)
-        if (isVocalist) musicalInstrument.add(MusicalInstrument.VOCAL)
-        if (isGuitarPlayer) musicalInstrument.add(MusicalInstrument.GUITAR)
-        if (musicalInstrument.size == 0) musicalInstrument.add(MusicalInstrument.NONE)
-
-        val searchSettings = mutableListOf<MusicalInstrument>()
-        val isLookingForDrummer = preference.getBoolean("isLookingForDrummer", false)
-        val isLookingForVocalist = preference.getBoolean("isLookingForVocalist", false)
-        val isLookingForGuitarPlayer = preference.getBoolean("isLookingForGuitarPlayer", false)
-
-        if (isLookingForDrummer) searchSettings.add(MusicalInstrument.DRUM)
-        if (isLookingForVocalist) searchSettings.add(MusicalInstrument.VOCAL)
-        if (isLookingForGuitarPlayer) searchSettings.add(MusicalInstrument.GUITAR)
-        if (searchSettings.size == 0) searchSettings.add(MusicalInstrument.NONE)
-
-
-        val name = tilName?.editText?.text.toString()
-        val surname = tilSurname?.editText?.text.toString()
-        val description = tilDescription?.editText?.text.toString()
-
-        FirestoreUtil.updateCurrentUser(
-            name = name,
-            surname = surname,
-            description = description,
-            musicalInstrument = musicalInstrument
-        )
-
-        FirestoreUtil.setSearchSettings(searchSettings)
-
+        saveData()
         super.onDestroyView()
+    }
+
+    private fun saveData() {
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            val preference = PreferenceManager.getDefaultSharedPreferences(this.context)
+
+            val musicalInstrument = mutableListOf<MusicalInstrument>()
+            val isDrummer = preference.getBoolean("isDrummer", false)
+            val isVocalist = preference.getBoolean("isVocalist", false)
+            val isGuitarPlayer = preference.getBoolean("isGuitarPlayer", false)
+
+            if (isDrummer) musicalInstrument.add(MusicalInstrument.DRUM)
+            if (isVocalist) musicalInstrument.add(MusicalInstrument.VOCAL)
+            if (isGuitarPlayer) musicalInstrument.add(MusicalInstrument.GUITAR)
+            if (musicalInstrument.size == 0) musicalInstrument.add(MusicalInstrument.NONE)
+
+            val searchSettings = mutableListOf<MusicalInstrument>()
+            val isLookingForDrummer = preference.getBoolean("isLookingForDrummer", false)
+            val isLookingForVocalist = preference.getBoolean("isLookingForVocalist", false)
+            val isLookingForGuitarPlayer = preference.getBoolean("isLookingForGuitarPlayer", false)
+
+            if (isLookingForDrummer) searchSettings.add(MusicalInstrument.DRUM)
+            if (isLookingForVocalist) searchSettings.add(MusicalInstrument.VOCAL)
+            if (isLookingForGuitarPlayer) searchSettings.add(MusicalInstrument.GUITAR)
+            if (searchSettings.size == 0) searchSettings.add(MusicalInstrument.NONE)
+
+
+            val name = tilName?.editText?.text.toString()
+            val surname = tilSurname?.editText?.text.toString()
+            val description = tilDescription?.editText?.text.toString()
+
+            FirestoreUtil.updateCurrentUser(
+                name = name,
+                surname = surname,
+                description = description,
+                musicalInstrument = musicalInstrument
+            )
+
+            FirestoreUtil.setSearchSettings(searchSettings)
+        }
     }
 }
 
@@ -192,6 +198,7 @@ class SettingFragment : PreferenceFragmentCompat() {
                     .putBoolean("isGuitarPlayer", true)
                     .apply()
         }
+        // TODO()
 
         val isGuitarPlayerPref: SwitchPreferenceCompat? = findPreference("isGuitarPlayer")
         isGuitarPlayerPref!!.setIcon(R.drawable.ic_eye_24)

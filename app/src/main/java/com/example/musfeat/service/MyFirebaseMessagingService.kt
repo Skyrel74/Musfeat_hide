@@ -37,7 +37,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         fun addTokenToFirestore(newRegistrationToken: String?) {
             if (newRegistrationToken == null) throw NullPointerException("FCM token is null.")
 
-            FirestoreUtil.getFCMRegistrationTokens(FirebaseAuth.getInstance().currentUser!!.uid) {}
+            if (FirebaseAuth.getInstance().currentUser != null)
+                FirestoreUtil.getFCMRegistrationTokens(FirebaseAuth.getInstance().currentUser!!.uid) {}
         }
 
         fun sendNotification(context: Context, json: JSONObject) {

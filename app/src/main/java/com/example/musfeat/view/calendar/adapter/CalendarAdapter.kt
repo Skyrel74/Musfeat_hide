@@ -10,7 +10,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.musfeat.R
 import com.example.musfeat.data.Event
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.events_item.*
+import kotlinx.android.synthetic.main.item_events.*
 
 class CalendarAdapter(private val onEventClick: (Event) -> Unit) :
     androidx.recyclerview.widget.ListAdapter<Event, CalendarAdapter.ViewHolder>(object :
@@ -30,7 +30,7 @@ class CalendarAdapter(private val onEventClick: (Event) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.events_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_events, parent, false)
         )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

@@ -46,9 +46,8 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     FirestoreUtil.initCurrentUserIfFirstTime {
-
                         FirestoreUtil.updateCurrentUser(
-                            FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                            FirebaseAuth.getInstance().currentUser!!.uid,
                             name,
                             surname,
                             email,
