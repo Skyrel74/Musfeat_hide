@@ -5,7 +5,9 @@ import android.view.View
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.architecture.BaseView
+import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.view.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +33,28 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
             }
         }
 
-        //cardStackAdapter?.setData(dataSet)
+        FirestoreUtil.getRandomUsers { dataSet ->
+            FirestoreUtil.getLikedUsers(FirebaseAuth.getInstance().currentUser!!.uid) { likedUsers ->
+                FirestoreUtil.getDislikedUsers(FirebaseAuth.getInstance().currentUser!!.uid) { dislikedUsers ->
+                    dataSet.forEach { user ->
+                        if (likedUsers.contains(user.uid) || dislikedUsers.contains(user.uid) ||
+                            user.uid == FirebaseAuth.getInstance().currentUser!!.uid
+                        )
+                            dataSet.remove(user)
+                    }
+                    cardStackAdapter?.setData(dataSet)
+                }
+            }
+        }
+
+
+        ibAccept.setOnClickListener {
+
+        }
+
+        ibCancel.setOnClickListener {
+
+        }
 
     }
 

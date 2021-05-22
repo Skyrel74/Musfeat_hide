@@ -239,4 +239,37 @@ object FirestoreUtil {
     fun setFCMRegistrationTokens(registrationTokens: MutableList<String>) {
         currentUserDocRef.update(mapOf("registrationTokens" to registrationTokens))
     }
+
+    fun getRandomUsers(onSuccess: (MutableList<User>) -> Unit) {
+        firestoreInstance.collection("users")
+            .get().addOnSuccessListener {
+                onSuccess(it.toObjects(User::class.java).shuffled().toMutableList())
+            }
+    }
+
+    fun getLikedUsers(userId: String, onSuccess: (List<String>) -> Unit) {
+        firestoreInstance.collection("users")
+            .document(userId)
+            .collection("extra")
+            .document("liked")
+            .get().addOnSuccessListener {
+                if (it.exists())
+                    onSuccess(it.toObject(String::class.java) as List<String>)
+                else
+                    onSuccess(emptyList())
+            }
+    }
+
+    fun getDislikedUsers(userId: String, onSuccess: (List<String>) -> Unit) {
+        firestoreInstance.collection("users")
+            .document(userId)
+            .collection("extra")
+            .document("disliked")
+            .get().addOnSuccessListener {
+                if (it.exists())
+                    onSuccess(it.toObject(List::class.java) as List<String>)
+                else
+                    onSuccess(emptyList())
+            }
+    }
 }
