@@ -198,7 +198,30 @@ class SettingFragment : PreferenceFragmentCompat() {
                     .putBoolean("isGuitarPlayer", true)
                     .apply()
         }
-        // TODO()
+        FirestoreUtil.getSearchSettings { search ->
+            if (search.contains(MusicalInstrument.NONE))
+                preference
+                    .edit()
+                    .putBoolean("isLookingForDrummer", false)
+                    .putBoolean("isLookingForVocalist", false)
+                    .putBoolean("isLookingForGuitarPlayer", false)
+                    .apply()
+            if (search.contains(MusicalInstrument.DRUM))
+                preference
+                    .edit()
+                    .putBoolean("isLookingForDrummer", true)
+                    .apply()
+            if (search.contains(MusicalInstrument.VOCAL))
+                preference
+                    .edit()
+                    .putBoolean("isLookingForVocalist", true)
+                    .apply()
+            if (search.contains(MusicalInstrument.GUITAR))
+                preference
+                    .edit()
+                    .putBoolean("isLookingForGuitarPlayer", true)
+                    .apply()
+        }
 
         val isGuitarPlayerPref: SwitchPreferenceCompat? = findPreference("isGuitarPlayer")
         isGuitarPlayerPref!!.setIcon(R.drawable.ic_eye_24)

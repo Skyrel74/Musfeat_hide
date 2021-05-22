@@ -67,7 +67,8 @@ object FirestoreUtil {
             .document("search")
             .get()
             .addOnSuccessListener {
-                onComplete(it.data?.get("channelIds") as List<MusicalInstrument>)
+                if (it.exists())
+                    onComplete(it.data?.get("searchSettings") as List<MusicalInstrument>)
             }
     }
 
