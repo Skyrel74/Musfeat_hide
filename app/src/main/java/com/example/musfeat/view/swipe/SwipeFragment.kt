@@ -36,12 +36,10 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
         FirestoreUtil.getRandomUsers { dataSet ->
             FirestoreUtil.getLikedUsers(FirebaseAuth.getInstance().currentUser!!.uid) { likedUsers ->
                 FirestoreUtil.getDislikedUsers(FirebaseAuth.getInstance().currentUser!!.uid) { dislikedUsers ->
-                    dataSet.forEach { user ->
-                        if (likedUsers.contains(user.uid) || dislikedUsers.contains(user.uid) ||
-                            user.uid == FirebaseAuth.getInstance().currentUser!!.uid
-                        )
-                            dataSet.remove(user)
-                    }
+                    dataSet.find { user ->
+                        likedUsers.contains(user.uid) || dislikedUsers.contains(user.uid) ||
+                                user.uid == FirebaseAuth.getInstance().currentUser!!.uid
+                    }?.let { dataSet.remove(it) }
                     cardStackAdapter?.setData(dataSet)
                 }
             }
