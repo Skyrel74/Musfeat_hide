@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.kotlinandroidextensions.Item
+import java.util.*
 
 object FirestoreUtil {
 
@@ -247,29 +248,73 @@ object FirestoreUtil {
             }
     }
 
-    fun getLikedUsers(userId: String, onSuccess: (List<String>) -> Unit) {
+    fun getLikedUsers(userId: String, onComplete: (List<String>) -> Unit) {
         firestoreInstance.collection("users")
             .document(userId)
             .collection("extra")
             .document("liked")
             .get().addOnSuccessListener {
                 if (it.exists())
-                    onSuccess(it.toObject(String::class.java) as List<String>)
+                    onComplete(it.data?.get("likedUsersIds") as List<String>)
                 else
-                    onSuccess(emptyList())
+                    onComplete(emptyList())
             }
     }
 
-    fun getDislikedUsers(userId: String, onSuccess: (List<String>) -> Unit) {
+    fun getDislikedUsers(userId: String, onComplete: (List<String>) -> Unit) {
         firestoreInstance.collection("users")
             .document(userId)
             .collection("extra")
             .document("disliked")
             .get().addOnSuccessListener {
                 if (it.exists())
-                    onSuccess(it.toObject(List::class.java) as List<String>)
+                    onComplete(it.data?.get("dislikedUsersIds") as List<String>)
                 else
-                    onSuccess(emptyList())
+                    onComplete(emptyList())
+            }
+    }
+
+    fun setLikedUser(likedUser: User) {
+        currentUserDocRef.collection("extra")
+            .document("liked")
+            .get().addOnSuccessListener { ds ->
+                if (!ds.exists())
+                    currentUserDocRef.collection("extra")
+                        .document("liked")
+                        .set(mapOf("likedUsersIds" to listOf(likedUser.uid)))
+                else {
+                    var data = ds.data?.get("likedUsersIds").toString()
+                    data = data.substring(1, data.length - 1)
+                    val likedUsersIds = mutableListOf(data)
+                    likedUsersIds.add(likedUser.uid)
+                    currentUserDocRef.collection("extra")
+                        .document("liked")
+                        .set(mapOf("likedUsersIds" to likedUsersIds))
+                }
+            }
+        getLikedUsers(likedUser.uid) {
+            if (it.contains(FirebaseAuth.getInstance().currentUser!!.uid))
+                getOrCreateChatChannel(UUID.randomUUID().toString(), likedUser.uid) {}
+        }
+    }
+
+    fun setDislikedUser(dislikedUser: User) {
+        currentUserDocRef.collection("extra")
+            .document("disliked")
+            .get().addOnSuccessListener { ds ->
+                if (!ds.exists())
+                    currentUserDocRef.collection("extra")
+                        .document("disliked")
+                        .set(mapOf("dislikedUsersIds" to listOf(dislikedUser.uid)))
+                else {
+                    var data = ds.data?.get("dislikedUsersIds").toString()
+                    data = data.substring(1, data.length - 1)
+                    val dislikedUsersIds = mutableListOf(data)
+                    dislikedUsersIds.add(dislikedUser.uid)
+                    currentUserDocRef.collection("extra")
+                        .document("disliked")
+                        .set(mapOf("dislikedUsersIds" to dislikedUsersIds))
+                }
             }
     }
 }
