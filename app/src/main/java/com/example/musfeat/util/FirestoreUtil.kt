@@ -8,6 +8,7 @@ import com.example.musfeat.view.recyclerview.item.ImageMessageItem
 import com.example.musfeat.view.recyclerview.item.TextMessageItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.kotlinandroidextensions.Item
@@ -114,7 +115,7 @@ object FirestoreUtil {
     fun removeListener(registration: ListenerRegistration) = registration.remove()
 
     fun addChatsListener(context: Context, onListen: (List<Item>) -> Unit): ListenerRegistration {
-        return currentUserDocRef.collection("extra")
+        return currentUserDocRef.collection("extra").document("chats")
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 if (firebaseFirestoreException != null) {
                     Log.e("FIRESTORE", "Chat listener error.", firebaseFirestoreException)
@@ -122,12 +123,10 @@ object FirestoreUtil {
                 }
 
                 var channelIds: List<String>? = mutableListOf()
-                querySnapshot?.documents?.forEach {
-                    channelIds = it.data?.get("channelIds") as MutableList<String>?
-                }
+                channelIds = querySnapshot?.data?.get("channelIds") as List<String>
 
                 val items = mutableListOf<Item>()
-                channelIds?.forEach { channelId ->
+                channelIds.forEach { channelId ->
                     chatChannelsCollectionRef.document(channelId).get()
                         .addOnSuccessListener { ds ->
                             val messagesIds = mutableListOf<String>()
@@ -169,28 +168,32 @@ object FirestoreUtil {
                     .collection("extra")
                     .document("chats")
                     .get().addOnSuccessListener { ds ->
-                        var data = ds.data?.get("channelIds").toString()
-                        data = data.substring(1, data.length - 1)
-                        val channelIds = mutableListOf(data)
-                        channelIds.add(newChannel.id)
-                        currentUserDocRef
-                            .collection("extra")
-                            .document("chats")
-                            .set(mapOf("channelIds" to channelIds))
+                        if (ds.exists())
+                            currentUserDocRef
+                                .collection("extra")
+                                .document("chats")
+                                .update("channelIds", FieldValue.arrayUnion(newChannel.id))
+                        else
+                            currentUserDocRef
+                                .collection("extra")
+                                .document("chats")
+                                .set(mapOf("channelIds" to listOf(newChannel.id)))
                     }
 
                 firestoreInstance.collection("users").document(otherUserId)
                     .collection("extra")
                     .document("chats")
                     .get().addOnSuccessListener { ds ->
-                        var data = ds.data?.get("channelIds").toString()
-                        data = data.substring(1, data.length - 1)
-                        val channelIds = mutableListOf(data)
-                        channelIds.add(newChannel.id)
-                        firestoreInstance.collection("users").document(otherUserId)
-                            .collection("extra")
-                            .document("chats")
-                            .set(mapOf("channelIds" to channelIds))
+                        if (ds.exists())
+                            firestoreInstance.collection("users").document(otherUserId)
+                                .collection("extra")
+                                .document("chats")
+                                .update("channelIds", FieldValue.arrayUnion(newChannel.id))
+                        else
+                            firestoreInstance.collection("users").document(otherUserId)
+                                .collection("extra")
+                                .document("chats")
+                                .set(mapOf("channelIds" to listOf(newChannel.id)))
                     }
 
                 onComplete(newChannel.id)
@@ -255,7 +258,7 @@ object FirestoreUtil {
             .document("liked")
             .get().addOnSuccessListener {
                 if (it.exists())
-                    onComplete(it.data?.get("likedUsersIds") as List<String>)
+                    onComplete(it?.data?.get("likedUsersIds") as List<String>)
                 else
                     onComplete(emptyList())
             }
@@ -268,7 +271,7 @@ object FirestoreUtil {
             .document("disliked")
             .get().addOnSuccessListener {
                 if (it.exists())
-                    onComplete(it.data?.get("dislikedUsersIds") as List<String>)
+                    onComplete(it?.data?.get("dislikedUsersIds") as List<String>)
                 else
                     onComplete(emptyList())
             }
@@ -283,18 +286,15 @@ object FirestoreUtil {
                         .document("liked")
                         .set(mapOf("likedUsersIds" to listOf(likedUser.uid)))
                 else {
-                    var data = ds.data?.get("likedUsersIds").toString()
-                    data = data.substring(1, data.length - 1)
-                    val likedUsersIds = mutableListOf(data)
-                    likedUsersIds.add(likedUser.uid)
                     currentUserDocRef.collection("extra")
                         .document("liked")
-                        .set(mapOf("likedUsersIds" to likedUsersIds))
+                        .update("likedUsersIds", FieldValue.arrayUnion(likedUser.uid))
                 }
             }
         getLikedUsers(likedUser.uid) {
-            if (it.contains(FirebaseAuth.getInstance().currentUser!!.uid))
+            if (it.contains(FirebaseAuth.getInstance().currentUser!!.uid)) {
                 getOrCreateChatChannel(UUID.randomUUID().toString(), likedUser.uid) {}
+            }
         }
     }
 
@@ -307,13 +307,9 @@ object FirestoreUtil {
                         .document("disliked")
                         .set(mapOf("dislikedUsersIds" to listOf(dislikedUser.uid)))
                 else {
-                    var data = ds.data?.get("dislikedUsersIds").toString()
-                    data = data.substring(1, data.length - 1)
-                    val dislikedUsersIds = mutableListOf(data)
-                    dislikedUsersIds.add(dislikedUser.uid)
                     currentUserDocRef.collection("extra")
                         .document("disliked")
-                        .set(mapOf("dislikedUsersIds" to dislikedUsersIds))
+                        .update("dislikedUsersIds", FieldValue.arrayUnion(dislikedUser.uid))
                 }
             }
     }

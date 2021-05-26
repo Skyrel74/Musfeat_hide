@@ -1,7 +1,6 @@
 package com.example.musfeat.view.swipe
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import com.example.musfeat.R
@@ -63,13 +62,14 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
         FirestoreUtil.getRandomUsers { dataSet ->
             FirestoreUtil.getLikedUsers(FirebaseAuth.getInstance().currentUser!!.uid) { likedUsers ->
                 FirestoreUtil.getDislikedUsers(FirebaseAuth.getInstance().currentUser!!.uid) { dislikedUsers ->
-                    dataSet.find { user ->
-                        Log.e("if", user.uid)
-                        likedUsers.contains(user.uid) || dislikedUsers.contains(user.uid) ||
-                                user.uid == FirebaseAuth.getInstance().currentUser!!.uid
-                    }?.let {
-                        Log.e("remove", it.uid)
-                        dataSet.remove(it)
+                    val iterator = dataSet.iterator()
+                    while (iterator.hasNext()) {
+                        val user = iterator.next()
+                        if (likedUsers.contains(user.uid)
+                            || dislikedUsers.contains(user.uid)
+                            || user.uid == FirebaseAuth.getInstance().currentUser!!.uid
+                        )
+                            iterator.remove()
                     }
                     FirestoreUtil.getSearchSettings { settings ->
                         if (!compare(listOf(MusicalInstrument.NONE), settings)) {
