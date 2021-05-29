@@ -32,6 +32,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView 
         (activity as MainActivity).showBackBtn(false)
 
         with(rvCalendar) {
+            //TODO возможно сделать через ресурсы
             val spanCount =
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 5
             layoutManager = GridLayoutManager(context, spanCount, GridLayoutManager.VERTICAL, false)

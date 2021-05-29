@@ -14,6 +14,7 @@ buildscript {
         groupieVersion = '2.0.3'
         cardStackViewVersion = '2.3.4'
         mapKitVersion = '4.0.0-full'
+        roomVersion = "2.3.0"
     }
 
     repositories {

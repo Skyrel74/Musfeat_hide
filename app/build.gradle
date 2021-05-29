@@ -145,4 +145,8 @@ dependencies {
 
     // For developers using AndroidX in their applications
     implementation 'pub.devrel:easypermissions:3.0.0'
+
+    // Room database
+    implementation "androidx.room:room-runtime:$roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$roomVersion"
 }
