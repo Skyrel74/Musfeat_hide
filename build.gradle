@@ -13,11 +13,13 @@ buildscript {
         preferenceVersion = '1.1.1'
         groupieVersion = '2.0.3'
         cardStackViewVersion = '2.3.4'
+        mapKitVersion = '4.0.0-full'
     }
 
     repositories {
         google()
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.2"

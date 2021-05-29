@@ -1,7 +1,6 @@
 package com.example.musfeat.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.core.view.isVisible
 import com.example.musfeat.AppConstants
 import com.example.musfeat.R
@@ -62,7 +61,6 @@ class MainActivity : BaseActivity(), MainView {
                         navView.selectedItemId = R.id.navigation_chat
                     }
                 }
-                Log.e("TAG", supportFragmentManager.findFragmentById(R.id.container).toString())
             }
         }
 

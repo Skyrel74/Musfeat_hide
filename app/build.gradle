@@ -8,6 +8,12 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion"
 }
 
+repositories {
+    maven {
+        url "http://maven.google.com/"
+    }
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -133,4 +139,10 @@ dependencies {
 
     // CardStackView
     implementation "com.yuyakaido.android:card-stack-view:$cardStackViewVersion"
+
+    // MapKit
+    implementation "com.yandex.android:maps.mobile:$mapKitVersion"
+
+    // For developers using AndroidX in their applications
+    implementation 'pub.devrel:easypermissions:3.0.0'
 }
