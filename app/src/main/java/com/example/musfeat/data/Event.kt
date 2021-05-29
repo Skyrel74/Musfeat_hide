@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-@Entity
+@Entity(tableName = "events")
 data class Event(
     val name: String, val date: String, val participantCount: String,
     val eventImageView: String, val description: String,@PrimaryKey val url: String

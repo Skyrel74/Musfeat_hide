@@ -15,6 +15,6 @@ interface EventDao {
     fun deleteEvent(event:Event)
 
 
-    @Query("SELECT * FROM event")
+    @Query("SELECT * FROM events")
     fun getAll() :List<Event>
 }
