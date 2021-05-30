@@ -1,6 +1,10 @@
 package com.example.musfeat.view.swipe
 
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import com.example.musfeat.R
@@ -16,6 +20,7 @@ import com.yuyakaido.android.cardstackview.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_swipe.*
+import org.jetbrains.anko.connectivityManager
 
 @AndroidEntryPoint
 class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
@@ -24,11 +29,43 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
     private var cardStackAdapter: CardStackAdapter? = null
     private var cardStackLayoutManager: CardStackLayoutManager? = null
 
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            Log.d("qweqweqwe", "onAvailable: ")
+            super.onAvailable(network)
+        }
+
+        override fun onUnavailable() {
+            Log.d("qweqweqwe", "onUnavailable: ")
+            super.onUnavailable()
+        }
+
+        override fun onLost(network: Network) {
+            Log.d("qweqweqwe", "onLost: ")
+            super.onLost(network)
+        }
+
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
+            Log.d("qweqweqwe", "onCapabilitiesChanged: ")
+            super.onCapabilitiesChanged(network, networkCapabilities)
+        }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        context?.connectivityManager?.registerDefaultNetworkCallback(networkCallback)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.cards_title)
         (activity as MainActivity).showNavView(true)
         (activity as MainActivity).showBackBtn(false)
+
 
         with(csvSwipe) {
             layoutManager = CardStackLayoutManager(requireContext(), object : CardStackListener {
@@ -119,4 +156,16 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
         cardStackAdapter = null
         cardStackLayoutManager = null
     }
+
+    override fun onDestroy() {
+        context?.connectivityManager?.unregisterNetworkCallback(networkCallback)
+        super.onDestroy()
+    }
+
+    //    private fun isInternetAvailable(): Boolean {
+//        val connectivityManager = requireContext().connectivityManager
+//        val capabilities =
+//            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+//        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
+//    }
 }

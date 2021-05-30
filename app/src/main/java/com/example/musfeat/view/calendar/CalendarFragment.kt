@@ -50,7 +50,8 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView 
         }
     }
 
-    fun isInternetAvailable(): Boolean {
+    //fixme livedata subscription?
+    private fun isInternetAvailable(): Boolean {
         val connectivityManager = requireContext().connectivityManager
         val capabilities =
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
