@@ -27,47 +27,17 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
 
-    private var uEmail: String? = null
-    private var uPassword: String? = null
-
-    companion object {
-
-        private const val ARG_EMAIL = "EMAIL"
-        private const val ARG_PASSWORD = "PASSWORD"
-
-        fun newInstance(email: String, password: String): SignInFragment {
-            val fragment = SignInFragment()
-            val args = Bundle()
-            args.putSerializable(ARG_EMAIL, email)
-            args.putSerializable(ARG_PASSWORD, password)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     @Inject
     lateinit var loginPresenter: SignInPresenter
     private val presenter: SignInPresenter by moxyPresenter { loginPresenter }
 
-    private lateinit var auth: FirebaseAuth
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth = FirebaseAuth.getInstance()
-        if (arguments != null) {
-            uEmail = requireArguments().getSerializable(ARG_EMAIL) as String
-            uPassword = requireArguments().getSerializable(ARG_PASSWORD) as String
-            presenter.signIn(uEmail!!, uPassword!!)
-        }
-    }
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.login_title)
         (activity as MainActivity).showBackBtn(false)
         (activity as MainActivity).showNavView(false)
-        if (auth.currentUser != null)
-            toSwipeFragment()
         setListeners()
     }
 

@@ -44,6 +44,9 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
         else -> {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
+
+                FirebaseAuth.getInstance().currentUser!!.sendEmailVerification()
+
                 if (task.isSuccessful) {
                     FirestoreUtil.initCurrentUserIfFirstTime {
                         FirestoreUtil.updateCurrentUser(
@@ -54,9 +57,9 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
                             musicalInstruments
                         )
 
-                        viewState.toSignInFragment(email, password)
+                        viewState.toSignInFragment()
                     }
-                    viewState.toSignInFragment(email, password)
+                    viewState.toSignInFragment()
                 } else {
                     viewState.showError("Создать аккаунт не получилось, попробуйте позже")
                 }

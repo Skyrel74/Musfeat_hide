@@ -16,16 +16,22 @@ class SignInPresenter @Inject constructor() : BasePresenter<SignInView>() {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    FirebaseMessaging.getInstance().token.addOnCompleteListener {
-                        FirestoreUtil.updateCurrentUser(registrationTokens = it.result)
-                        MyFirebaseMessagingService.addTokenToFirestore(it.result)
-                        Log.d("FCM", it.result.toString())
+                    val isEmailVerified: Boolean =
+                        FirebaseAuth.getInstance().currentUser?.isEmailVerified ?: false
+                    if (isEmailVerified) {
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+                            FirestoreUtil.updateCurrentUser(registrationTokens = it.result)
+                            MyFirebaseMessagingService.addTokenToFirestore(it.result)
+                            Log.d("FCM", it.result.toString())
+                        }
+                        viewState.toSwipeFragment()
+                    } else {
+                        FirebaseAuth.getInstance().signOut()
+                        viewState.showError("Подтвердите email")
                     }
-                    viewState.toSwipeFragment()
-                } else {
-                    viewState.showError("Неверный логин или пароль")
                 }
             }
+
     }
 
     fun isEmailValid(email: String): Boolean =
