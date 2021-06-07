@@ -12,26 +12,23 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.SignInPresenter
 import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.signUp.SignUpFragment
 import com.example.musfeat.view.swipe.SwipeFragment
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_sign_in.*
+import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
+class SignInFragment : MvpAppCompatFragment(R.layout.fragment_sign_in), SignInView {
 
     @Inject
     lateinit var loginPresenter: SignInPresenter
     private val presenter: SignInPresenter by moxyPresenter { loginPresenter }
-
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

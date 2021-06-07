@@ -1,9 +1,11 @@
 package com.example.musfeat.view.signUp
 
-import com.example.musfeat.architecture.BaseView
+import moxy.MvpView
+import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.OneExecution
 
-interface SignUpView : BaseView {
+@AddToEndSingle
+interface SignUpView : MvpView {
 
     @OneExecution
     fun toSignInFragment()

@@ -1,14 +1,15 @@
 package com.example.musfeat.view.message
 
-import com.example.musfeat.architecture.BaseView
 import com.xwray.groupie.kotlinandroidextensions.Item
+import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 
-interface MessageView : BaseView {
+@AddToEndSingle
+interface MessageView : MvpView {
 
     @AddToEndSingle
     fun setSettingsFragment()
 
     @AddToEndSingle
-    fun updateRecyclerView(messages: List<Item>)
+    fun updateRecyclerView(items: List<Item>)
 }

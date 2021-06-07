@@ -1,14 +1,14 @@
 package com.example.musfeat.presentation
 
-import com.example.musfeat.architecture.BasePresenter
 import com.example.musfeat.data.MusicalInstrument
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.view.signUp.SignUpView
 import com.google.firebase.auth.FirebaseAuth
+import moxy.MvpPresenter
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
+class SignUpPresenter @Inject constructor() : MvpPresenter<SignUpView>() {
 
     fun isEmailValid(email: String): Boolean =
         email.isNotEmpty() && Pattern.compile(
@@ -43,27 +43,27 @@ class SignUpPresenter @Inject constructor() : BasePresenter<SignUpView>() {
         password != repeatPassword -> viewState.showError("Пароли не совпадают")
         else -> {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
+                .addOnCompleteListener { task ->
 
-                FirebaseAuth.getInstance().currentUser!!.sendEmailVerification()
+                    FirebaseAuth.getInstance().currentUser!!.sendEmailVerification()
 
-                if (task.isSuccessful) {
-                    FirestoreUtil.initCurrentUserIfFirstTime {
-                        FirestoreUtil.updateCurrentUser(
-                            FirebaseAuth.getInstance().currentUser!!.uid,
-                            name,
-                            surname,
-                            email,
-                            musicalInstruments
-                        )
+                    if (task.isSuccessful) {
+                        FirestoreUtil.initCurrentUserIfFirstTime {
+                            FirestoreUtil.updateCurrentUser(
+                                FirebaseAuth.getInstance().currentUser!!.uid,
+                                name,
+                                surname,
+                                email,
+                                musicalInstruments
+                            )
 
+                            viewState.toSignInFragment()
+                        }
                         viewState.toSignInFragment()
+                    } else {
+                        viewState.showError("Создать аккаунт не получилось, попробуйте позже")
                     }
-                    viewState.toSignInFragment()
-                } else {
-                    viewState.showError("Создать аккаунт не получилось, попробуйте позже")
                 }
-            }
         }
     }
 }

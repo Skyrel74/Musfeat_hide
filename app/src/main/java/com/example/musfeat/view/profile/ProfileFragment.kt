@@ -13,7 +13,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.MusicalInstrument
 import com.example.musfeat.glide.GlideApp
 import com.example.musfeat.presentation.ProfilePresenter
@@ -25,12 +24,13 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
+class ProfileFragment : MvpAppCompatFragment(R.layout.fragment_profile), ProfileView {
 
     private var pictureJustChanged: Boolean = false
 
@@ -106,7 +106,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
         }
         (activity as MainActivity).showProgressBar(false)
         logoutButton.setOnClickListener {
-            saveData()
+            presenter.saveData(
+                PreferenceManager.getDefaultSharedPreferences(this.context),
+                tilName?.editText?.text.toString(),
+                tilSurname?.editText?.text.toString(),
+                tilDescription?.editText?.text.toString()
+            )
             FirebaseAuth.getInstance().signOut()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.container, SignInFragment())
@@ -119,48 +124,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile), ProfileView {
     }
 
     override fun onDestroyView() {
-        saveData()
+        presenter.saveData(
+            PreferenceManager.getDefaultSharedPreferences(this.context),
+            tilName?.editText?.text.toString(),
+            tilSurname?.editText?.text.toString(),
+            tilDescription?.editText?.text.toString()
+        )
         super.onDestroyView()
-    }
-
-    private fun saveData() {
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            val preference = PreferenceManager.getDefaultSharedPreferences(this.context)
-
-            val musicalInstrument = mutableListOf<MusicalInstrument>()
-            val isDrummer = preference.getBoolean("isDrummer", false)
-            val isVocalist = preference.getBoolean("isVocalist", false)
-            val isGuitarPlayer = preference.getBoolean("isGuitarPlayer", false)
-
-            if (isDrummer) musicalInstrument.add(MusicalInstrument.DRUM)
-            if (isVocalist) musicalInstrument.add(MusicalInstrument.VOCAL)
-            if (isGuitarPlayer) musicalInstrument.add(MusicalInstrument.GUITAR)
-            if (musicalInstrument.size == 0) musicalInstrument.add(MusicalInstrument.NONE)
-
-            val searchSettings = mutableListOf<MusicalInstrument>()
-            val isLookingForDrummer = preference.getBoolean("isLookingForDrummer", false)
-            val isLookingForVocalist = preference.getBoolean("isLookingForVocalist", false)
-            val isLookingForGuitarPlayer = preference.getBoolean("isLookingForGuitarPlayer", false)
-
-            if (isLookingForDrummer) searchSettings.add(MusicalInstrument.DRUM)
-            if (isLookingForVocalist) searchSettings.add(MusicalInstrument.VOCAL)
-            if (isLookingForGuitarPlayer) searchSettings.add(MusicalInstrument.GUITAR)
-            if (searchSettings.size == 0) searchSettings.add(MusicalInstrument.NONE)
-
-
-            val name = tilName?.editText?.text.toString()
-            val surname = tilSurname?.editText?.text.toString()
-            val description = tilDescription?.editText?.text.toString()
-
-            FirestoreUtil.updateCurrentUser(
-                name = name,
-                surname = surname,
-                description = description,
-                musicalInstrument = musicalInstrument
-            )
-
-            FirestoreUtil.setSearchSettings(searchSettings)
-        }
     }
 }
 

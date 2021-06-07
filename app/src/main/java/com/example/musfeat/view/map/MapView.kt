@@ -1,7 +1,7 @@
-package com.example.musfeat.architecture
+package com.example.musfeat.view.map
 
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 
 @AddToEndSingle
-interface BaseView : MvpView
+interface MapView : MvpView

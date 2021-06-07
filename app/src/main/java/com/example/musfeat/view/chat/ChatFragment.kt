@@ -4,30 +4,34 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseFragment
+import com.example.musfeat.data.User
+import com.example.musfeat.presentation.ChatPresenter
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.message.MessageFragment
 import com.example.musfeat.view.recyclerview.item.ChatItem
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.OnItemClickListener
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatFragment : BaseFragment(R.layout.fragment_chat), ChatView {
+class ChatFragment : MvpAppCompatFragment(R.layout.fragment_chat), ChatView {
 
     private lateinit var chatListenerRegistration: ListenerRegistration
-
+    private lateinit var chatSection: Section
     private var shouldInitRecyclerView: Boolean = true
 
-    private lateinit var chatSection: Section
+    @Inject
+    lateinit var chatPresenter: ChatPresenter
+    private val presenter: ChatPresenter by moxyPresenter { chatPresenter }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +51,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat), ChatView {
                 adapter = GroupAdapter<ViewHolder>().apply {
                     chatSection = Section(items)
                     add(chatSection)
-                    setOnItemClickListener(onItemClick)
+                    setOnItemClickListener(presenter.onItemClick())
                 }
             }
             shouldInitRecyclerView = false
@@ -61,22 +65,16 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat), ChatView {
             updateItems()
     }
 
-    private val onItemClick = OnItemClickListener { item, _ ->
-        if (item is ChatItem) {
-            val secondId: String =
-                item.chat.usersIds.filter { it != FirebaseAuth.getInstance().currentUser!!.uid }[0]
-            FirestoreUtil.getUserByUid(secondId) { secondUser ->
-                parentFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.container, MessageFragment.newInstance(
-                            secondUser.name,
-                            secondUser.uid,
-                            item.chat.channelId
-                        )
-                    )
-                    .commit()
-            }
-        }
+    override fun toMessageFragment(secondUser: User, item: ChatItem) {
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.container, MessageFragment.newInstance(
+                    secondUser.name,
+                    secondUser.uid,
+                    item.chat.channelId
+                )
+            )
+            .commit()
     }
 
     override fun onDestroyView() {

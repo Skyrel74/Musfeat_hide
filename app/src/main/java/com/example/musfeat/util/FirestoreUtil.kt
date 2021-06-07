@@ -122,27 +122,31 @@ object FirestoreUtil {
                     return@addSnapshotListener
                 }
 
-                var channelIds: List<String>? = mutableListOf()
-                channelIds = querySnapshot?.data?.get("channelIds") as List<String>
+                if (querySnapshot != null && querySnapshot.exists()) {
+                    var channelIds: List<String>? = mutableListOf()
+                    channelIds = querySnapshot?.data?.get("channelIds") as List<String>
 
-                val items = mutableListOf<Item>()
-                channelIds.forEach { channelId ->
-                    chatChannelsCollectionRef.document(channelId).get()
-                        .addOnSuccessListener { ds ->
-                            val messagesIds = mutableListOf<String>()
-                            chatChannelsCollectionRef.document(channelId).collection("messages")
-                                .get().addOnSuccessListener {
-                                    it.documents.forEach { ds ->
-                                        messagesIds.add(ds.id)
+                    val items = mutableListOf<Item>()
+                    channelIds.forEach { channelId ->
+                        chatChannelsCollectionRef.document(channelId).get()
+                            .addOnSuccessListener { ds ->
+                                val messagesIds = mutableListOf<String>()
+                                chatChannelsCollectionRef.document(channelId).collection("messages")
+                                    .get().addOnSuccessListener {
+                                        it.documents.forEach { ds ->
+                                            messagesIds.add(ds.id)
+                                        }
+                                        val chat = Chat(
+                                            channelId,
+                                            ds.data?.get("name").toString(),
+                                            ds.data?.get("userIds") as MutableList<String>,
+                                            messagesIds
+                                        )
+                                        items.add(ChatItem(chat, context))
+                                        onListen(items)
                                     }
-                                    val chat = Chat(
-                                        channelId, ds.data?.get("name").toString(),
-                                        ds.data?.get("userIds") as MutableList<String>, messagesIds
-                                    )
-                                    items.add(ChatItem(chat, context))
-                                    onListen(items)
-                                }
-                        }
+                            }
+                    }
                 }
             }
     }

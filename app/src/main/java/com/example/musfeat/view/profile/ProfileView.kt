@@ -1,10 +1,12 @@
 package com.example.musfeat.view.profile
 
 import android.os.Bundle
-import com.example.musfeat.architecture.BaseView
+import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEnd
+import moxy.viewstate.strategy.alias.AddToEndSingle
 
-interface ProfileView : BaseView {
+@AddToEndSingle
+interface ProfileView : MvpView {
 
     @AddToEnd
     fun setSettingsFragment(savedInstanceState: Bundle?)
