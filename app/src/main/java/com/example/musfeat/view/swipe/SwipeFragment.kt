@@ -4,7 +4,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.view.isGone
@@ -30,6 +29,7 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
     private lateinit var userListenerRegistration: ListenerRegistration
     private var cardStackAdapter: CardStackAdapter? = null
     private var cardStackLayoutManager: CardStackLayoutManager? = null
+
     private var isCardStackSet = false
 
 
@@ -39,13 +39,14 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
                 runOnUiThread { showNoInternetError(false) }
             } else {
                 runOnUiThread {
-                    setupCardStackView().also { Log.d("qweqweqwe", "onAvailable: ") }
+                    setupCardStackView()
                     setUsers()
                     setupCardStackViewButtons()
                     showNoInternetError(false)
                     isCardStackSet = true
                 }
             }
+
         }
 
         override fun onLost(network: Network) {
@@ -66,8 +67,8 @@ class SwipeFragment : BaseFragment(R.layout.fragment_swipe), BaseView {
         (activity as MainActivity).showBackBtn(false)
 
 
-        if (isInternetAvailable()) {
-            setupCardStackView().also { Log.d("qweqweqwe", "onViewCreated:  ") }
+        if (isInternetAvailable() && !isCardStackSet) {
+            setupCardStackView()
             setUsers()
             setupCardStackViewButtons()
             isCardStackSet = true

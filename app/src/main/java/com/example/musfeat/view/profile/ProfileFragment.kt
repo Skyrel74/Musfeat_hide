@@ -11,7 +11,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreferenceCompat
 import com.example.musfeat.R
 import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.MusicalInstrument
@@ -222,8 +221,5 @@ class SettingFragment : PreferenceFragmentCompat() {
                     .putBoolean("isLookingForGuitarPlayer", true)
                     .apply()
         }
-
-        val isGuitarPlayerPref: SwitchPreferenceCompat? = findPreference("isGuitarPlayer")
-        isGuitarPlayerPref!!.setIcon(R.drawable.ic_eye_24)
     }
 }

@@ -39,11 +39,5 @@
             app:title="@string/registration_guitar" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/profile_my_location"
-        app:key="my_location">
-        <!--TODO: location list-->
-    </PreferenceCategory>
-
 
 </PreferenceScreen>

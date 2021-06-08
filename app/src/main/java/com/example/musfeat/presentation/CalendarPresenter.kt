@@ -28,42 +28,25 @@ class CalendarPresenter @Inject constructor(
             Log.e("tag", error.message, error)
             viewState.showLoading(isShow = false)
         }) {
-
-            //TODO check if there is network to select source
-//            events = getEventsUseCase()
             viewState.setEvents(events)
             viewState.showLoading(isShow = false)
         }
     }
 
-    //fixme
     suspend fun selectDatasource(
         isConnectionAvailable: Boolean,
         currentTimestamp: Long,
         oldTimestamp: Long
     ) {
         val timestampDiff = currentTimestamp - oldTimestamp
-//        events =
-//            if (isConnectionAvailable) getEventsUseCase().also { getDatabaseUseCase(it) } else getDatabaseUseCase()
-        //fixme delete logs
         events = when {
-            !isConnectionAvailable -> getDatabaseUseCase().also {
-                Log.d(
-                    "qweqweqwe",
-                    "selectDatasource: 1"
-                )
-            }
-            isConnectionAvailable && (timestampDiff < CALENDAR_CACHE_TIME) -> getDatabaseUseCase().also {
-                Log.d(
-                    "qweqweqwe",
-                    "selectDatasource: 2"
-                )
-            }
+            !isConnectionAvailable -> getDatabaseUseCase()
+            isConnectionAvailable && (timestampDiff < CALENDAR_CACHE_TIME) -> getDatabaseUseCase()
             isConnectionAvailable && (timestampDiff >= CALENDAR_CACHE_TIME) -> getEventsUseCase().also {
                 getDatabaseUseCase(it)
                 viewState.setTimestamp(currentTimestamp)
-            }.also { Log.d("qweqweqwe", "selectDatasource: 3") }
-            else -> getDatabaseUseCase().also { Log.d("qweqweqwe", "selectDatasource: 4") }
+            }
+            else -> getDatabaseUseCase()
         }
     }
 }
