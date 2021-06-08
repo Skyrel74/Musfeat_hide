@@ -7,16 +7,15 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musfeat.AppConstants
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.ImageMessage
 import com.example.musfeat.data.TextMessage
 import com.example.musfeat.data.User
+import com.example.musfeat.presentation.MessagePresenter
 import com.example.musfeat.service.MyFirebaseMessagingService
 import com.example.musfeat.util.FirestoreUtil
 import com.example.musfeat.util.StorageUtil
@@ -30,12 +29,15 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_message.*
+import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
+class MessageFragment : MvpAppCompatFragment(R.layout.fragment_message), MessageView {
 
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -69,10 +71,6 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
             }
         }
 
-    private lateinit var messagesListenerRegistration: ListenerRegistration
-    private var shouldInitRecyclerView = true
-    private lateinit var messageSection: Section
-
     private var uName: String? = null
     private lateinit var uId: String
     private lateinit var channelId: String
@@ -90,6 +88,14 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
         }
     }
 
+    private lateinit var messagesListenerRegistration: ListenerRegistration
+    private lateinit var messageSection: Section
+    private var shouldInitRecyclerView = true
+
+    @Inject
+    lateinit var messagePresenter: MessagePresenter
+    private val presenter: MessagePresenter by moxyPresenter { messagePresenter }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -100,10 +106,7 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
         uId = requireArguments().getSerializable(AppConstants.USER_ID) as String
         channelId = requireArguments().getSerializable(AppConstants.CHANNEL_ID) as String
         uName = requireArguments().getSerializable(AppConstants.USER_NAME) as String
-    }
 
-    override fun onStart() {
-        super.onStart()
         activity?.toolbar?.title = uName
         (activity as MainActivity).showNavView(false)
         (activity as MainActivity).showBackBtn(true)
@@ -148,24 +151,25 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
     }
 
 
-    override fun updateRecyclerView(messages: List<Item>) {
+    override fun updateRecyclerView(items: List<Item>) {
         fun init() {
             rvMessages.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = GroupAdapter<ViewHolder>().apply {
-                    messageSection = Section(messages)
+                    messageSection = Section(items)
                     this.add(messageSection)
                 }
             }
             shouldInitRecyclerView = false
         }
 
-        fun updateItems() = messageSection.update(messages)
+        fun updateItems() = messageSection.update(items)
 
         if (shouldInitRecyclerView)
             init()
         else
             updateItems()
+
         if (rvMessages?.adapter?.itemCount != null)
             rvMessages.scrollToPosition(rvMessages.adapter!!.itemCount - 1)
     }
@@ -185,7 +189,6 @@ class MessageFragment : BaseFragment(R.layout.fragment_message), MessageView {
         FirestoreUtil.getFCMRegistrationTokens(uId) {
             to.put("to", it)
             to.put("data", data)
-            Log.e("TAG", to.toString())
             MyFirebaseMessagingService.sendNotification(requireContext(), to)
         }
     }

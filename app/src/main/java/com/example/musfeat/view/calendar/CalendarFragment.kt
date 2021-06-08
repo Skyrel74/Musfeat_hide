@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.Event
 import com.example.musfeat.presentation.CalendarPresenter
 import com.example.musfeat.view.MainActivity
@@ -18,12 +17,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import kotlinx.coroutines.runBlocking
+import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import org.jetbrains.anko.connectivityManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView {
+class CalendarFragment : MvpAppCompatFragment(R.layout.fragment_calendar), CalendarView {
 
     @Inject
     lateinit var calendarPresenter: CalendarPresenter
@@ -49,7 +49,6 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarView 
             )
         }
         with(rvCalendar) {
-            //TODO возможно сделать через ресурсы
             val spanCount =
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 5
             layoutManager = GridLayoutManager(context, spanCount, GridLayoutManager.VERTICAL, false)

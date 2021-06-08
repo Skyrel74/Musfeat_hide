@@ -1,4 +1,4 @@
-package com.example.napoleonitapp.entity
+package com.example.musfeat.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

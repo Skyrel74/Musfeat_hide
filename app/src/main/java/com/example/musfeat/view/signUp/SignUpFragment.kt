@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.data.MusicalInstrument
 import com.example.musfeat.presentation.SignUpPresenter
 import com.example.musfeat.view.MainActivity
@@ -20,15 +19,15 @@ import com.example.musfeat.view.signIn.SignInFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_sign_up.*
+import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
+class SignUpFragment : MvpAppCompatFragment(R.layout.fragment_sign_up), SignUpView {
 
     @Inject
     lateinit var registrationPresenter: SignUpPresenter
-
     private val presenter: SignUpPresenter by moxyPresenter { registrationPresenter }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -377,7 +376,7 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
-    override fun toSignInFragment(uid: String, email: String) {
+    override fun toSignInFragment() {
         val resources = requireContext().resources
         val theme = requireContext().theme
         var drawable = DrawableCompat.wrap(
@@ -425,7 +424,7 @@ class SignUpFragment : BaseFragment(R.layout.fragment_sign_up), SignUpView {
         etPasswordReg.setText("")
         etPasswordRegRepeat.setText("")
         parentFragmentManager.beginTransaction()
-            .replace(R.id.container, SignInFragment.newInstance(uid, email))
+            .replace(R.id.container, SignInFragment())
             .commit()
     }
 

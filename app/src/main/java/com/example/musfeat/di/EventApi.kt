@@ -1,6 +1,6 @@
 package com.example.musfeat.di
 
-import com.example.napoleonitapp.entity.EventResponse
+import com.example.musfeat.entity.EventResponse
 import retrofit2.http.GET
 
 interface EventApi {

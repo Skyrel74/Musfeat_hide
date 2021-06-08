@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.core.view.isVisible
 import com.example.musfeat.AppConstants
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseActivity
 import com.example.musfeat.view.calendar.CalendarFragment
 import com.example.musfeat.view.chat.ChatFragment
 import com.example.musfeat.view.map.MapFragment
@@ -16,9 +15,10 @@ import com.example.musfeat.view.swipe.SwipeFragment
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
+import moxy.MvpAppCompatActivity
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(), MainView {
+class MainActivity : MvpAppCompatActivity(), MainView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,42 +66,42 @@ class MainActivity : BaseActivity(), MainView {
 
         if (navView.isVisible)
             navView?.selectedItemId = R.id.navigation_cards
-            navView.setOnNavigationItemSelectedListener OnNavigationItemSelectedListener@{ item ->
-                when (item.itemId) {
-                    R.id.navigation_cards -> {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, SwipeFragment())
-                            .commit()
-                        return@OnNavigationItemSelectedListener true
+        navView.setOnNavigationItemSelectedListener OnNavigationItemSelectedListener@{ item ->
+            when (item.itemId) {
+                R.id.navigation_cards -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, SwipeFragment())
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
 
-                    }
-                    R.id.navigation_map -> {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, MapFragment())
-                            .commit()
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navigation_chat -> {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, ChatFragment())
-                            .commit()
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navigation_calendar -> {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, CalendarFragment())
-                            .commit()
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navigation_profile -> {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, ProfileFragment())
-                            .commit()
-                        return@OnNavigationItemSelectedListener true
-                    }
                 }
-                return@OnNavigationItemSelectedListener false
+                R.id.navigation_map -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, MapFragment())
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_chat -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, ChatFragment())
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_calendar -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, CalendarFragment())
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_profile -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, ProfileFragment())
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
             }
+            return@OnNavigationItemSelectedListener false
+        }
     }
 
     override fun showProgressBar(isVisible: Boolean) {

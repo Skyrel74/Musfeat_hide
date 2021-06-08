@@ -12,62 +12,29 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.musfeat.R
-import com.example.musfeat.architecture.BaseFragment
 import com.example.musfeat.presentation.SignInPresenter
 import com.example.musfeat.view.MainActivity
 import com.example.musfeat.view.signUp.SignUpFragment
 import com.example.musfeat.view.swipe.SwipeFragment
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_sign_in.*
+import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SignInFragment : BaseFragment(R.layout.fragment_sign_in), SignInView {
-
-    private var uEmail: String? = null
-    private var uPassword: String? = null
-
-    companion object {
-
-        private const val ARG_EMAIL = "EMAIL"
-        private const val ARG_PASSWORD = "PASSWORD"
-
-        fun newInstance(email: String, password: String): SignInFragment {
-            val fragment = SignInFragment()
-            val args = Bundle()
-            args.putSerializable(ARG_EMAIL, email)
-            args.putSerializable(ARG_PASSWORD, password)
-            fragment.arguments = args
-            return fragment
-        }
-    }
+class SignInFragment : MvpAppCompatFragment(R.layout.fragment_sign_in), SignInView {
 
     @Inject
     lateinit var loginPresenter: SignInPresenter
     private val presenter: SignInPresenter by moxyPresenter { loginPresenter }
-
-    private lateinit var auth: FirebaseAuth
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth = FirebaseAuth.getInstance()
-        if (arguments != null) {
-            uEmail = requireArguments().getSerializable(ARG_EMAIL) as String
-            uPassword = requireArguments().getSerializable(ARG_PASSWORD) as String
-            presenter.signIn(uEmail!!, uPassword!!)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.login_title)
         (activity as MainActivity).showBackBtn(false)
         (activity as MainActivity).showNavView(false)
-        if (auth.currentUser != null)
-            toSwipeFragment()
         setListeners()
     }
 
