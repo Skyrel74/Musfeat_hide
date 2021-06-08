@@ -16,10 +16,10 @@ import com.yuyakaido.android.cardstackview.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_swipe.*
-import org.jetbrains.anko.connectivityManager
-import org.jetbrains.anko.support.v4.runOnUiThread
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import org.jetbrains.anko.connectivityManager
+import org.jetbrains.anko.support.v4.runOnUiThread
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,12 +32,55 @@ class SwipeFragment : MvpAppCompatFragment(R.layout.fragment_swipe), SwipeView {
     lateinit var swipePresenter: SwipePresenter
     private val presenter: SwipePresenter by moxyPresenter { swipePresenter }
 
+    private var isCardStackSet = false
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            if (isCardStackSet) {
+                runOnUiThread { showNoInternetError(false) }
+            } else {
+                runOnUiThread {
+                    setupCardStackView()
+                    presenter.setData()
+                    setupCardStackViewButtons()
+                    showNoInternetError(false)
+                    isCardStackSet = true
+                }
+            }
+
+        }
+
+        override fun onLost(network: Network) {
+            runOnUiThread { showNoInternetError(true) }
+
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        context?.connectivityManager?.registerDefaultNetworkCallback(networkCallback)
+        super.onCreate(savedInstanceState)
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbar?.title = getString(R.string.cards_title)
         (activity as MainActivity).showNavView(true)
         (activity as MainActivity).showBackBtn(false)
 
+        if (isInternetAvailable() && !isCardStackSet) {
+            setupCardStackView()
+            presenter.setData()
+            setupCardStackViewButtons()
+            isCardStackSet = true
+        } else {
+            showNoInternetError(true)
+        }
+
+
+        presenter.setData()
+    }
+
+    private fun setupCardStackView() {
         with(csvSwipe) {
             layoutManager = CardStackLayoutManager(requireContext(), object : CardStackListener {
 
@@ -66,7 +109,14 @@ class SwipeFragment : MvpAppCompatFragment(R.layout.fragment_swipe), SwipeView {
                 cardStackAdapter = it
             }
         }
+    }
 
+    private fun showNoInternetError(isInternetAvailable: Boolean) {
+        groupCardStackView.isGone = isInternetAvailable
+        groupNoInternet.isGone = !isInternetAvailable
+    }
+
+    private fun setupCardStackViewButtons() {
         ibAccept.setOnClickListener {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Right)
@@ -86,8 +136,6 @@ class SwipeFragment : MvpAppCompatFragment(R.layout.fragment_swipe), SwipeView {
             cardStackLayoutManager?.setSwipeAnimationSetting(setting)
             csvSwipe?.swipe()
         }
-
-        presenter.setData()
     }
 
     override fun setData(dataSet: List<User>) {
@@ -98,5 +146,17 @@ class SwipeFragment : MvpAppCompatFragment(R.layout.fragment_swipe), SwipeView {
         super.onDestroyView()
         cardStackAdapter = null
         cardStackLayoutManager = null
+    }
+
+    override fun onDestroy() {
+        context?.connectivityManager?.unregisterNetworkCallback(networkCallback)
+        super.onDestroy()
+    }
+
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager = requireContext().connectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
     }
 }

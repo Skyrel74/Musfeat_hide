@@ -2,7 +2,6 @@ package com.example.musfeat.presentation
 
 import android.util.Log
 import com.example.musfeat.AppConstants.CALENDAR_CACHE_TIME
-import com.example.musfeat.architecture.BasePresenter
 import com.example.musfeat.data.Event
 import com.example.musfeat.domain.GetDatabaseUseCase
 import com.example.musfeat.domain.GetEventsUseCase

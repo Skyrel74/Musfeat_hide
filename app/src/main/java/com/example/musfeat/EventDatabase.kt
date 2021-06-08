@@ -14,7 +14,6 @@ abstract class EventDatabase:RoomDatabase() {
     companion object {
         @Volatile
         private var instance: EventDatabase? = null
-
         fun getInstance(context: Context): EventDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
@@ -25,5 +24,4 @@ abstract class EventDatabase:RoomDatabase() {
             return Room.databaseBuilder(context, EventDatabase::class.java, "events.db").build()
         }
     }
-
 }
