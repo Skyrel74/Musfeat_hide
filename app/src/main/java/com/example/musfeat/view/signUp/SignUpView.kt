@@ -7,9 +7,15 @@ import moxy.viewstate.strategy.alias.OneExecution
 @AddToEndSingle
 interface SignUpView : MvpView {
 
+    /**
+     * Go to sign in fragment
+     */
     @OneExecution
     fun toSignInFragment()
 
+    /**
+     * Show error [message]
+     */
     @OneExecution
     fun showError(message: String)
 }

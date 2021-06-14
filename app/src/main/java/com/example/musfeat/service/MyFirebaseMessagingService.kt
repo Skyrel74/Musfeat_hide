@@ -217,7 +217,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             PendingIntent.getActivity(context, 0, ii, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification: Notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //Log.e("Notification", "Created in up to orio OS device");
             notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setOngoing(true)
                 .setSmallIcon(getNotificationIcon())

@@ -12,7 +12,6 @@ import com.example.musfeat.R
 import com.example.musfeat.data.Event
 import com.example.musfeat.presentation.CalendarPresenter
 import com.example.musfeat.view.MainActivity
-import com.example.musfeat.view.calendar.adapter.CalendarAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_wrapper.*
 import kotlinx.android.synthetic.main.fragment_calendar.*
@@ -52,9 +51,7 @@ class CalendarFragment : MvpAppCompatFragment(R.layout.fragment_calendar), Calen
             val spanCount =
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 5
             layoutManager = GridLayoutManager(context, spanCount, GridLayoutManager.VERTICAL, false)
-            adapter = CalendarAdapter(onEventClick = {
-                // TODO(Сделать подробнее о событиях)
-            }).also {
+            adapter = CalendarAdapter {}.also {
                 calendarAdapter = it
             }
         }
@@ -64,7 +61,6 @@ class CalendarFragment : MvpAppCompatFragment(R.layout.fragment_calendar), Calen
         preferences?.edit()?.putLong("calendar_cache_timestamp", timestamp)?.apply()
     }
 
-    //fixme livedata subscription?
     private fun isInternetAvailable(): Boolean {
         val connectivityManager = requireContext().connectivityManager
         val capabilities =

@@ -5,6 +5,9 @@ import retrofit2.http.GET
 
 interface EventApi {
 
+    /**
+     * Get event response from event API request
+     */
     @GET("public-api/v1.4/events/?expand=dates&fields=images,dates,body_text,title,favorites_count,site_url,description")
-    suspend fun getEvents() : EventResponse
+    suspend fun getEvents(): EventResponse
 }

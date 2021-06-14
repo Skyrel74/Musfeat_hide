@@ -10,9 +10,17 @@ import moxy.viewstate.strategy.alias.OneExecution
 @AddToEndSingle
 interface ChatView : MvpView {
 
+    /**
+     * Update recyclerview by [items] list
+     */
     @AddToEndSingle
     fun updateRecyclerView(items: List<Item>)
 
+    /**
+     * Go to message fragment
+     * [secondUser] is user with whom there is a chat
+     * [item] is the chat itself
+     */
     @OneExecution
     fun toMessageFragment(secondUser: User, item: ChatItem)
 }

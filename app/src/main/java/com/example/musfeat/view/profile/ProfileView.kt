@@ -8,6 +8,9 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 @AddToEndSingle
 interface ProfileView : MvpView {
 
+    /**
+     * Set settings for fragment
+     */
     @AddToEnd
     fun setSettingsFragment(savedInstanceState: Bundle?)
 }

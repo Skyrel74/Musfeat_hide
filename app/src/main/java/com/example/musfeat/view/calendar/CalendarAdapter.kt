@@ -1,4 +1,4 @@
-package com.example.musfeat.view.calendar.adapter
+package com.example.musfeat.view.calendar
 
 import android.view.LayoutInflater
 import android.view.View

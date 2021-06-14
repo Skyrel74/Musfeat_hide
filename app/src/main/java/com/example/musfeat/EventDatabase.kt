@@ -8,8 +8,8 @@ import com.example.musfeat.data.Event
 import com.example.musfeat.di.EventDao
 
 @Database(entities = [Event::class], version = 1, exportSchema = false)
-abstract class EventDatabase:RoomDatabase() {
-    abstract fun eventDao():EventDao
+abstract class EventDatabase : RoomDatabase() {
+    abstract fun eventDao(): EventDao
 
     companion object {
         @Volatile

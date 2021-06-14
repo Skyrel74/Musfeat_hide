@@ -8,12 +8,12 @@ import javax.inject.Inject
 
 class GetDatabaseUseCase @Inject constructor(private val eventDatabase: EventDatabase) {
 
-    suspend operator fun invoke(): List<Event> = withContext(Dispatchers.IO){
+    suspend operator fun invoke(): List<Event> = withContext(Dispatchers.IO) {
         eventDatabase.eventDao().getAll()
     }
 
-    suspend operator fun invoke(events:List<Event>){
-        withContext(Dispatchers.IO){
+    suspend operator fun invoke(events: List<Event>) {
+        withContext(Dispatchers.IO) {
             eventDatabase.eventDao().insertAllByList(events)
         }
     }
